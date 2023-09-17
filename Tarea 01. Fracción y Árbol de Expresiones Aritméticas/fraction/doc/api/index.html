@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="generator" content="made with love by dartdoc 7.0.0-dev">
+  <meta name="description" content="fraction API docs, for the Dart programming language.">
+  <title>fraction - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">fraction package</li>
+  </ol>
+  <div class="self-name">fraction</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <h1 id="a-command-line-application-with-an-entrypoint-in-bin-library-code-in-lib-and-example-unit-test-in-test">A command-line application with an entrypoint in <code>bin/</code>, library code in <code>lib/</code>, and example unit test in <code>test/</code></h1>
+<p>This is a library to implement a <code>Fraction</code> data type. A <code>Fraction</code> can be created from two <code>int</code>, from a <code>double</code>, from a <code>String</code>, or from a <code>JSON</code> using the following format:</p>
+<p>From two ints:
+<code>var f1 = Fraction(5, 9);</code></p>
+<p>From a double:
+<code>var f2 = Fraction.fromDouble(1.5);</code></p>
+<p>From a String:
+<code>var f3 = Fraction.fromString("345/753");</code></p>
+<p>From a JSON:
+<code>var f4 = Fraction.fromJson({'numerator': 12, 'denominator': 1});</code></p>
+<p>It also allows for data conversions:
+<code>var f5 = 9.toFraction();</code>
+<code>var f6 = 1.5.toFraction();</code>
+<code>var f7 = "13/61".toFraction();</code></p>
+<p>Also basic operations:
+<code>var sum = f1 + f2;</code>
+<code>var difference = f1 - f2;</code>
+<code>var product = f1 * f2;</code>
+<code>var quotient = f1 / f2;</code></p>
+<p>Comparisons:
+<code>var lessThan = f1 &lt; f2;</code>
+<code>var lessThanOrEqual = f1 &lt;= f2;</code>
+<code>var equalTo = f1 == f2;</code>
+<code>var greaterThanOrEqual = f1 &gt;= f2;</code>
+<code>var greaterThan = f1 &gt; f2;</code></p>
+<p>And some extras:
+<code>var isProper = f1.isProper;</code>
+<code>var isImproper = f1.isImproper;</code>
+<code>var isWhole = f1.isWhole;</code>
+<code>var pow = f1.pow(2);</code>
+<code>var numValue = f1.toNum();</code></p>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="fraction">
+  <span class="name"><a href="fraction/fraction-library.html">fraction</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+        </dl>
+      </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li class="self-crumb">fraction package</li>
+</ol>
+
+
+    <h5 class="hidden-xs"><span class="package-name">fraction</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="fraction/fraction-library.html">fraction</a></li>
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+
+</main>
+
+<footer>
+  <span class="no-break">
+    fraction
+      1.0.0
+  </span>
+
+  
+</footer>
+
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+
