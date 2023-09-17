@@ -4,7 +4,7 @@ class Fraction {
   late int _denominator;
 
   /// Constructor to create a [Fraction] based on two [int]
-  Fraction(int numerator, int denominator, {precision = 2}) {
+  Fraction(int numerator, int denominator) {
     if (denominator == 0) {
       throw FractionException("Denominator cannot be zero");
     }
@@ -15,7 +15,7 @@ class Fraction {
   }
 
   /// Constructor to create a [Fraction] based on a [double]
-  Fraction.fromDouble(double value, {int precision = 2}) {
+  Fraction.fromDouble(double value, {precision = 2}) {
     final int multiplier = _pow(10, precision);
 
     final int numerator = (value * multiplier).toInt();
@@ -27,7 +27,7 @@ class Fraction {
   }
 
   /// Constructor to create a [Fraction] based on a [String]
-  Fraction.fromString(String fractionString, {int precision = 2}) {
+  Fraction.fromString(String fractionString, {precision = 2}) {
     final parts = fractionString.split('/');
     if (parts.length != 2) {
       throw FractionException("Invalid fraction format");

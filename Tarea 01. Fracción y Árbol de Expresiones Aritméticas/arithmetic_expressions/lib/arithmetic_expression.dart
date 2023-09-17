@@ -1,4 +1,5 @@
 import 'package:arithmetic_expression/fraction.dart';
+import 'dart:io';
 
 class TreeNode {
   dynamic value;
@@ -16,7 +17,7 @@ class ArithmeticExpression {
     _expression = expression;
   }
 
-  bool isOperator(String token) {
+  bool isOperator(dynamic token) {
     return token == '+' || token == '-' || token == '*' || token == '/';
   }
 
@@ -29,13 +30,34 @@ class ArithmeticExpression {
     return 0;
   }
 
-  List<String> tokenizeExpression() {
-    List<String> tokens = [];
-    String currentToken = "";
+  List<dynamic> tokenizeExpression() {
+    List<dynamic> tokens = [];
+    dynamic currentToken = "";
+    bool openBrackets = false;
+    int start = 0;
 
     for (int i = 0; i < _expression.length; i++) {
       String char = _expression[i];
       if (char == ' ') {
+        continue;
+      }
+
+      if (char == "[" && i < _expression.length) {
+        start = i + 1;
+        openBrackets = true;
+        continue;
+      } else if (char == "]") {
+        openBrackets = false;
+        String fractionStr = _expression.substring(start, i);
+        List<String> parts = fractionStr.split('/');
+        try {
+          tokens.add(Fraction(int.parse(parts[0]), int.parse(parts[1])));
+        } on FormatException {
+          print('Error: numbers for Fraction must be integers');
+          exit(0);
+        }
+        continue;
+      } else if (openBrackets == true) {
         continue;
       }
 
@@ -57,11 +79,11 @@ class ArithmeticExpression {
     return tokens;
   }
 
-  TreeNode buildExpressionTree(List<String> tokens) {
+  TreeNode buildExpressionTree(List<dynamic> tokens) {
     List<TreeNode> stack = [];
     List<String> operators = [];
 
-    for (String token in tokens) {
+    for (dynamic token in tokens) {
       if (token == '(') {
         operators.add(token);
       } else if (token == ')') {
@@ -76,18 +98,8 @@ class ArithmeticExpression {
         }
         operators.removeLast(); // Remove the '(' from the stack
       } else if (!isOperator(token)) {
-        if (token.startsWith("[") && token.endsWith("]")) {
-          // Handle fractions enclosed in square brackets
-          String fractionStr = token.substring(1, token.length - 1);
-          List<String> parts = fractionStr.split("/");
-          int numerator = int.parse(parts[0]);
-          int denominator = int.parse(parts[1]);
-          Fraction fraction = Fraction(numerator, denominator);
-          stack.add(TreeNode(fraction));
-        } else {
-          TreeNode node = TreeNode(token);
-          stack.add(node);
-        }
+        TreeNode node = TreeNode(token);
+        stack.add(node);
       } else {
         while (operators.isNotEmpty &&
             precedence(operators.last) >= precedence(token)) {
@@ -126,6 +138,14 @@ class ArithmeticExpression {
     if (!isOperator(node.value)) {
       if (node.value is Fraction) {
         return node.value;
+      } else if (node.value is String) {
+        try {
+          return Fraction.fromDouble(double.parse(node.value));
+        } on FormatException {
+          String value = node.value;
+          print('Error: invalid value found: $value');
+          exit(0);
+        }
       } else {
         return Fraction(int.parse(node.value), 1);
       }
@@ -149,7 +169,7 @@ class ArithmeticExpression {
   }
 
   Fraction evaluateExpression() {
-    List<String> tokens = tokenizeExpression();
+    List<dynamic> tokens = tokenizeExpression();
     root = buildExpressionTree(tokens);
     return evaluate(root);
   }
