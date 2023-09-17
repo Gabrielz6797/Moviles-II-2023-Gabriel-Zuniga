@@ -24,9 +24,24 @@ class ArithmeticExpression {
   }
 
   Fraction evaluateExpression() {
+    verifyInput();
     List<dynamic> tokens = tokenizeExpression();
+    _expression = tokens.join(' ');
     root = buildExpressionTree(tokens);
     return evaluate(root);
+  }
+
+  verifyInput() {
+    _expression = _expression.replaceAll(' ', '');
+    for (int i = 0; i < _expression.length; i++) {
+      if (_expression[i] == "-") {
+        if (_expression[i + 1] == "(") {
+          print(
+              "Error: the actual algorithm doesn't work with minus signs before a parenthesis ('-()'), please rewrite it");
+          exit(0);
+        }
+      }
+    }
   }
 
   List<dynamic> tokenizeExpression() {
@@ -207,11 +222,7 @@ class ArithmeticExpression {
       return;
     }
 
-    if (node.value is Fraction) {
-      _preOrder += "${node.value} ";
-    } else {
-      _preOrder += "${node.value} ";
-    }
+    _preOrder += "${node.value} ";
 
     // Recursively print the left subtree
     calculatePreorder(node.left);
@@ -224,6 +235,10 @@ class ArithmeticExpression {
   String getPreorder() {
     calculatePreorder(root);
     return _preOrder;
+  }
+
+  String getParsedExpression() {
+    return _expression;
   }
 }
 
