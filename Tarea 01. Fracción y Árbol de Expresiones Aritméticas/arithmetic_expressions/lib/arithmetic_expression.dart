@@ -116,14 +116,19 @@ class ArithmeticExpression {
     }
 
     while (operators.isNotEmpty) {
-      String operator = operators.removeLast();
-      TreeNode right = stack.removeLast();
-      TreeNode left = stack.removeLast();
+      try {
+        String operator = operators.removeLast();
+        TreeNode right = stack.removeLast();
+        TreeNode left = stack.removeLast();
 
-      TreeNode newNode = TreeNode(operator);
-      newNode.left = left;
-      newNode.right = right;
-      stack.add(newNode);
+        TreeNode newNode = TreeNode(operator);
+        newNode.left = left;
+        newNode.right = right;
+        stack.add(newNode);
+      } on RangeError {
+        print('Error: bad expression');
+        exit(0);
+      }
     }
 
     return stack.first;
