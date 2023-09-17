@@ -15,6 +15,10 @@ class ArithmeticExpression {
   late TreeNode root;
 
   ArithmeticExpression(String expression) {
+    if (expression == "") {
+      print("Error: expression can not be empty");
+      exit(0);
+    }
     _expression = expression;
     _preOrder = "";
   }
@@ -71,6 +75,18 @@ class ArithmeticExpression {
       tokens.add(currentToken);
     }
 
+    // Handle negative numbers
+    for (int i = 0; i < tokens.length; i++) {
+      if (tokens[i] == '-') {
+        if (i == 0 || isOperator(tokens[i - 1]) || tokens[i - 1] == '(') {
+          if (i + 1 < tokens.length && !isOperator(tokens[i + 1])) {
+            tokens[i + 1] = '-${tokens[i + 1]}'; // Make the next token negative
+            tokens.removeAt(i); // Remove the '-' token
+          }
+        }
+      }
+    }
+
     return tokens;
   }
 
@@ -102,14 +118,19 @@ class ArithmeticExpression {
       } else {
         while (operators.isNotEmpty &&
             precedence(operators.last) >= precedence(token)) {
-          String operator = operators.removeLast();
-          TreeNode right = stack.removeLast();
-          TreeNode left = stack.removeLast();
+          try {
+            String operator = operators.removeLast();
+            TreeNode right = stack.removeLast();
+            TreeNode left = stack.removeLast();
 
-          TreeNode newNode = TreeNode(operator);
-          newNode.left = left;
-          newNode.right = right;
-          stack.add(newNode);
+            TreeNode newNode = TreeNode(operator);
+            newNode.left = left;
+            newNode.right = right;
+            stack.add(newNode);
+          } on RangeError {
+            print('Error: bad expression');
+            exit(0);
+          }
         }
         operators.add(token);
       }
@@ -203,5 +224,17 @@ class ArithmeticExpression {
   String getPreorder() {
     calculatePreorder(root);
     return _preOrder;
+  }
+}
+
+/// Generic exception to handle bad input format
+class ExpressionException implements Exception {
+  final String message;
+
+  ExpressionException(this.message);
+
+  @override
+  String toString() {
+    return 'ExpressionException: $message';
   }
 }
