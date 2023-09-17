@@ -3,31 +3,26 @@ import 'dart:io';
 
 class TreeNode {
   dynamic value;
-  late TreeNode left;
-  late TreeNode right;
+  TreeNode? left;
+  TreeNode? right;
 
   TreeNode(this.value);
 }
 
 class ArithmeticExpression {
   late String _expression;
+  late String _preOrder;
   late TreeNode root;
 
   ArithmeticExpression(String expression) {
     _expression = expression;
+    _preOrder = "";
   }
 
-  bool isOperator(dynamic token) {
-    return token == '+' || token == '-' || token == '*' || token == '/';
-  }
-
-  int precedence(String operator) {
-    if (operator == '+' || operator == '-') {
-      return 1;
-    } else if (operator == '*' || operator == '/') {
-      return 2;
-    }
-    return 0;
+  Fraction evaluateExpression() {
+    List<dynamic> tokens = tokenizeExpression();
+    root = buildExpressionTree(tokens);
+    return evaluate(root);
   }
 
   List<dynamic> tokenizeExpression() {
@@ -77,6 +72,10 @@ class ArithmeticExpression {
     }
 
     return tokens;
+  }
+
+  bool isOperator(dynamic token) {
+    return token == '+' || token == '-' || token == '*' || token == '/';
   }
 
   TreeNode buildExpressionTree(List<dynamic> tokens) {
@@ -130,6 +129,15 @@ class ArithmeticExpression {
     return stack.first;
   }
 
+  int precedence(String operator) {
+    if (operator == '+' || operator == '-') {
+      return 1;
+    } else if (operator == '*' || operator == '/') {
+      return 2;
+    }
+    return 0;
+  }
+
   Fraction evaluate(TreeNode? node) {
     if (node == null) {
       return Fraction(0, 1);
@@ -142,8 +150,7 @@ class ArithmeticExpression {
         try {
           return Fraction.fromDouble(double.parse(node.value));
         } on FormatException {
-          String value = node.value;
-          print('Error: invalid value found: $value');
+          print('Error: invalid value found: ${node.value}');
           exit(0);
         }
       } else {
@@ -168,9 +175,28 @@ class ArithmeticExpression {
     }
   }
 
-  Fraction evaluateExpression() {
-    List<dynamic> tokens = tokenizeExpression();
-    root = buildExpressionTree(tokens);
-    return evaluate(root);
+  // Function to print the tree in pre-order
+  void calculatePreorder(TreeNode? node) {
+    if (node == null) {
+      return;
+    }
+
+    if (node.value is Fraction) {
+      _preOrder += "${node.value} ";
+    } else {
+      _preOrder += "${node.value} ";
+    }
+
+    // Recursively print the left subtree
+    calculatePreorder(node.left);
+
+    // Recursively print the right subtree
+    calculatePreorder(node.right);
+  }
+
+  // Call this function to print the tree in pre-order
+  String getPreorder() {
+    calculatePreorder(root);
+    return _preOrder;
   }
 }
