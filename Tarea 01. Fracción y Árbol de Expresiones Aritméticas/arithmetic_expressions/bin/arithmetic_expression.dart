@@ -2,7 +2,7 @@ import 'package:arithmetic_expression/arithmetic_expression.dart';
 import 'package:arithmetic_expression/fraction.dart';
 
 void main(List<String> arguments) {
-  String expression = "([9/81] + 65.5) / (-3 - 2)";
+  String expression = "([2/30] * [54/270]) / (35.2 - 1000000)";
   print("Entered expression: $expression");
   ArithmeticExpression expressionTree = ArithmeticExpression(expression);
   Fraction resultFraction = expressionTree.evaluateExpression();

@@ -1,6 +1,6 @@
 import 'package:arithmetic_expression/fraction.dart';
-import 'dart:io';
 
+/// Class to save the tokens that form the given expression
 class TreeNode {
   dynamic value;
   TreeNode? left;
@@ -9,41 +9,50 @@ class TreeNode {
   TreeNode(this.value);
 }
 
+/// Main class of the file, saves the expression in [_expression], and saves a
+/// String with the equivalent preorder expression in [_preorder], also has a
+/// [root]
 class ArithmeticExpression {
   late String _expression;
-  late String _preOrder;
+  late String _preorder;
   late TreeNode root;
 
+  /// Class contructor, checks for black expressions and can throw an
+  /// [ExpressionException]
   ArithmeticExpression(String expression) {
     if (expression == "") {
-      print("Error: expression can not be empty");
-      exit(0);
+      throw ExpressionException("Expression can not be empty");
     }
     _expression = expression;
-    _preOrder = "";
+    _preorder = "";
   }
 
+  /// Main function of the class, calls other functions to solve the expression
   Fraction evaluateExpression() {
     verifyInput();
     List<dynamic> tokens = tokenizeExpression();
     _expression = tokens.join(' ');
-    root = buildExpressionTree(tokens);
-    return evaluate(root);
+    root = _buildExpressionTree(tokens);
+    return _evaluate(root);
   }
 
+  /// Verifies that the input expression is supported, right now the algorithm
+  /// doesn't work with negative parenthesis ('-()')
   verifyInput() {
     _expression = _expression.replaceAll(' ', '');
     for (int i = 0; i < _expression.length; i++) {
       if (_expression[i] == "-") {
-        if (_expression[i + 1] == "(") {
-          print(
-              "Error: the actual algorithm doesn't work with minus signs before a parenthesis ('-()'), please rewrite it");
-          exit(0);
+        if (i + 1 < _expression.length && _expression[i + 1] == "(") {
+          if (i - 1 > 0 && _isOperator(_expression[i - 1])) {
+            throw ExpressionException(
+                "The actual algorithm can't handle negative parenthesis ('-()'), please rewrite the expression");
+          }
         }
       }
     }
   }
 
+  /// Separates the expression into tokens and stores them into a list
   List<dynamic> tokenizeExpression() {
     List<dynamic> tokens = [];
     dynamic currentToken = "";
@@ -67,15 +76,14 @@ class ArithmeticExpression {
         try {
           tokens.add(Fraction(int.parse(parts[0]), int.parse(parts[1])));
         } on FormatException {
-          print('Error: numbers for Fraction must be integers');
-          exit(0);
+          throw ExpressionException("Numbers for Fraction must be integers");
         }
         continue;
       } else if (openBrackets == true) {
         continue;
       }
 
-      if (isOperator(char) || char == '(' || char == ')') {
+      if (_isOperator(char) || char == '(' || char == ')') {
         if (currentToken.isNotEmpty) {
           tokens.add(currentToken);
           currentToken = "";
@@ -93,10 +101,10 @@ class ArithmeticExpression {
     // Handle negative numbers
     for (int i = 0; i < tokens.length; i++) {
       if (tokens[i] == '-') {
-        if (i == 0 || isOperator(tokens[i - 1]) || tokens[i - 1] == '(') {
-          if (i + 1 < tokens.length && !isOperator(tokens[i + 1])) {
-            tokens[i + 1] = '-${tokens[i + 1]}'; // Make the next token negative
-            tokens.removeAt(i); // Remove the '-' token
+        if (i == 0 || _isOperator(tokens[i - 1]) || tokens[i - 1] == '(') {
+          if (i + 1 < tokens.length && !_isOperator(tokens[i + 1])) {
+            tokens[i + 1] = '-${tokens[i + 1]}';
+            tokens.removeAt(i);
           }
         }
       }
@@ -105,14 +113,17 @@ class ArithmeticExpression {
     return tokens;
   }
 
-  bool isOperator(dynamic token) {
+  /// Checks if a character is an operator
+  bool _isOperator(dynamic token) {
     return token == '+' || token == '-' || token == '*' || token == '/';
   }
 
-  TreeNode buildExpressionTree(List<dynamic> tokens) {
+  /// Uses the list of tokens to build the tree
+  TreeNode _buildExpressionTree(List<dynamic> tokens) {
     List<TreeNode> stack = [];
     List<String> operators = [];
 
+    // Traverses the list of tokens and removes them while adding them to the tree
     for (dynamic token in tokens) {
       if (token == '(') {
         operators.add(token);
@@ -126,13 +137,14 @@ class ArithmeticExpression {
           newNode.right = right;
           stack.add(newNode);
         }
-        operators.removeLast(); // Remove the '(' from the stack
-      } else if (!isOperator(token)) {
+        // Remove the '(' from the stack
+        operators.removeLast();
+      } else if (!_isOperator(token)) {
         TreeNode node = TreeNode(token);
         stack.add(node);
       } else {
         while (operators.isNotEmpty &&
-            precedence(operators.last) >= precedence(token)) {
+            _precedence(operators.last) >= _precedence(token)) {
           try {
             String operator = operators.removeLast();
             TreeNode right = stack.removeLast();
@@ -143,8 +155,7 @@ class ArithmeticExpression {
             newNode.right = right;
             stack.add(newNode);
           } on RangeError {
-            print('Error: bad expression');
-            exit(0);
+            throw ExpressionException("Bad expression");
           }
         }
         operators.add(token);
@@ -162,15 +173,15 @@ class ArithmeticExpression {
         newNode.right = right;
         stack.add(newNode);
       } on RangeError {
-        print('Error: bad expression');
-        exit(0);
+        throw ExpressionException("Bad expression");
       }
     }
 
     return stack.first;
   }
 
-  int precedence(String operator) {
+  /// Calculates the precedence of operators
+  int _precedence(String operator) {
     if (operator == '+' || operator == '-') {
       return 1;
     } else if (operator == '*' || operator == '/') {
@@ -179,29 +190,32 @@ class ArithmeticExpression {
     return 0;
   }
 
-  Fraction evaluate(TreeNode? node) {
+  /// Evaluates the value of the given node and depending on the type of the
+  /// token it contains, also throws [ExpressionException] if the value is not
+  /// valid
+  Fraction _evaluate(TreeNode? node) {
     if (node == null) {
       return Fraction(0, 1);
     }
 
-    if (!isOperator(node.value)) {
+    if (!_isOperator(node.value)) {
       if (node.value is Fraction) {
         return node.value;
       } else if (node.value is String) {
         try {
           return Fraction.fromDouble(double.parse(node.value));
         } on FormatException {
-          print('Error: invalid value found: ${node.value}');
-          exit(0);
+          throw ExpressionException("Invalid value found: ${node.value}'");
         }
       } else {
         return Fraction(int.parse(node.value), 1);
       }
     }
 
-    Fraction leftValue = evaluate(node.left);
-    Fraction rightValue = evaluate(node.right);
+    Fraction leftValue = _evaluate(node.left);
+    Fraction rightValue = _evaluate(node.right);
 
+    // Performs the required operation if the node contains an operator
     switch (node.value) {
       case '+':
         return leftValue + rightValue;
@@ -212,29 +226,29 @@ class ArithmeticExpression {
       case '/':
         return leftValue / rightValue;
       default:
-        throw Exception("Invalid operator: ${node.value}");
+        throw ExpressionException("Invalid operator: ${node.value}");
     }
   }
 
-  // Function to print the tree in pre-order
-  void calculatePreorder(TreeNode? node) {
+  /// Auxiliary function to calculate the tree in preorder
+  void _calculatePreorder(TreeNode? node) {
     if (node == null) {
       return;
     }
 
-    _preOrder += "${node.value} ";
+    _preorder += "${node.value} ";
 
-    // Recursively print the left subtree
-    calculatePreorder(node.left);
+    // Recursively read the left subtree
+    _calculatePreorder(node.left);
 
-    // Recursively print the right subtree
-    calculatePreorder(node.right);
+    // Recursively read the right subtree
+    _calculatePreorder(node.right);
   }
 
-  // Call this function to print the tree in pre-order
+  /// Function to calculate the tree in preorder
   String getPreorder() {
-    calculatePreorder(root);
-    return _preOrder;
+    _calculatePreorder(root);
+    return _preorder;
   }
 
   String getParsedExpression() {

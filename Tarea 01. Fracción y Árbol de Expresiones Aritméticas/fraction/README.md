@@ -15,26 +15,30 @@ From a JSON:
 `var f4 = Fraction.fromJson({'numerator': 12, 'denominator': 1});`
 
 It also allows for data conversions:
-`var f5 = 9.toFraction();`
-`var f6 = 1.5.toFraction();`
-`var f7 = "13/61".toFraction();`
+
+1. `var f5 = 9.toFraction();`
+2. `var f6 = 1.5.toFraction();`
+3. `var f7 = "13/61".toFraction();`
 
 Also basic operations:
-`var sum = f1 + f2;`
-`var difference = f1 - f2;`
-`var product = f1 * f2;`
-`var quotient = f1 / f2;`
+
+1. `var sum = f1 + f2;`
+2. `var difference = f1 - f2;`
+3. `var product = f1 * f2;`
+4. `var quotient = f1 / f2;`
 
 Comparisons:
-`var lessThan = f1 < f2;`
-`var lessThanOrEqual = f1 <= f2;`
-`var equalTo = f1 == f2;`
-`var greaterThanOrEqual = f1 >= f2;`
-`var greaterThan = f1 > f2;`
+
+1. `var lessThan = f1 < f2;`
+2. `var lessThanOrEqual = f1 <= f2;`
+3. `var equalTo = f1 == f2;`
+4. `var greaterThanOrEqual = f1 >= f2;`
+5. `var greaterThan = f1 > f2;`
 
 And some extras:
-`var isProper = f1.isProper;`
-`var isImproper = f1.isImproper;`
-`var isWhole = f1.isWhole;`
-`var pow = f1.pow(2);`
-`var numValue = f1.toNum();`
+
+1. `var isProper = f1.isProper;`
+2. `var isImproper = f1.isImproper;`
+3. `var isWhole = f1.isWhole;`
+4. `var pow = f1.pow(2);`
+5. `var numValue = f1.toNum();`

@@ -1,7 +1,7 @@
 import 'package:fraction/fraction.dart';
 
 void main(List<String> arguments) {
-  // Same code in test file
+  // Same tests in test file
 
   // Constructors
   var f1 = Fraction(5, 9);
