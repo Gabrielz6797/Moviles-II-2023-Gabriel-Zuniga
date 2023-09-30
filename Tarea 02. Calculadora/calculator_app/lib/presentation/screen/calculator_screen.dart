@@ -124,7 +124,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       backgroundColor: Colors.lightBlueAccent,
                       onPressed: () => onPress("AC"),
                     ),
-                    CalculatorBtn(
+                    const CalculatorBtn(
                       icon: Icons.percent_rounded,
                       backgroundColor: Colors.white38,
                     ),
@@ -133,7 +133,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       backgroundColor: Colors.white38,
                       onPressed: () => onPress("backspace"),
                     ),
-                    CalculatorBtn(
+                    const CalculatorBtn(
                       text: "/",
                       backgroundColor: Colors.lightBlueAccent,
                     ),
@@ -158,7 +158,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       backgroundColor: Colors.white12,
                       onPressed: () => onPress("9"),
                     ),
-                    CalculatorBtn(
+                    const CalculatorBtn(
                       text: "x",
                       backgroundColor: Colors.lightBlueAccent,
                     ),
@@ -183,7 +183,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       backgroundColor: Colors.white12,
                       onPressed: () => onPress("6"),
                     ),
-                    CalculatorBtn(
+                    const CalculatorBtn(
                       text: "-",
                       backgroundColor: Colors.lightBlueAccent,
                     ),
@@ -215,11 +215,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 15,),
+                const SizedBox(height: 15,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CalculatorBtn(
+                    const CalculatorBtn(
                       text: "+/-",
                       backgroundColor: Colors.white12,
                     ),
