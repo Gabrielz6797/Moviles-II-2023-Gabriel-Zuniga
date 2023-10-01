@@ -51,6 +51,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               while (bigScreen[bigScreen.length - 1] != "[") {
                 bigScreen = bigScreen.substring(0, bigScreen.length - 1);
               }
+            } else if (bigScreen[bigScreen.length - 1] == "^") {
+              waitingForPow = false;
             }
             bigScreen = bigScreen.substring(0, bigScreen.length - 1);
             TextSpan lastElement = textSpans.removeLast();
@@ -96,6 +98,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               calculateResult();
             } on RangeError {
               smallScreen = 'Error: Internal error occurred';
+              bigScreen = '';
             } catch (e) {
               if (e.toString().split('Exception: ')[1] !=
                   'Expression can not be empty') {
@@ -233,8 +236,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     }
 
     while (bigScreen != "" &&
-            (num.tryParse(bigScreen[bigScreen.length - 1]) != null) ||
-        isInsideBrackets) {
+        (num.tryParse(bigScreen[bigScreen.length - 1]) != null ||
+            bigScreen[bigScreen.length - 1] == "." ||
+            isInsideBrackets)) {
       tokens.add(bigScreen[bigScreen.length - 1]);
       bigScreen = bigScreen.substring(0, bigScreen.length - 1);
       if (!isInsideBrackets) textSpans.removeLast();
@@ -254,14 +258,20 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     dynamic parsedNum1 = 0;
 
     try {
-      parsedNum1 = double.parse(num1);
+      parsedNum1 = int.parse(num1);
     } catch (e) {
-      parsedNum1 = num1.toFraction();
+      try {
+        parsedNum1 = double.parse(num1);
+      } catch (e) {
+        parsedNum1 = num1.toFraction();
+      }
     }
 
-    bigScreen = parsedNum1 is double
-        ? '$bigScreen${double.parse(num1).toFraction().pow(int.parse(num2))}'
-        : '$bigScreen${num1.toFraction().pow(int.parse(num2))}';
+    bigScreen = parsedNum1 is int
+        ? '$bigScreen${int.parse(num1).toFraction().pow(int.parse(num2))}'
+        : parsedNum1 is double
+            ? '[$bigScreen${double.parse(num1).toFraction().pow(int.parse(num2))}]'
+            : '[$bigScreen${num1.toFraction().pow(int.parse(num2))}]';
 
     textSpans.add(
       TextSpan(
