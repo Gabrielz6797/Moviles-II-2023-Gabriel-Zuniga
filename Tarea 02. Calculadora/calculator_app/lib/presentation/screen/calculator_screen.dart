@@ -14,8 +14,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   String smallScreen = '';
   String bigScreen = '';
 
+  List<TextSpan> textSpans = [];
+
   int parenthesisCount = 0;
   int bracketsCount = 0;
+
+  bool waitingForPow = false;
+
   num result = 0;
 
   void onPress(String text) {
@@ -24,6 +29,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         case 'AC':
           smallScreen = '';
           bigScreen = '';
+          textSpans = [];
           parenthesisCount = 0;
           bracketsCount = 0;
           result = 0;
@@ -32,6 +38,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           if (bigScreen == '') break;
           if (bigScreen.length == 1) {
             bigScreen = '';
+            textSpans.removeLast();
           } else {
             if (bigScreen[bigScreen.length - 1] == "(") {
               parenthesisCount--;
@@ -40,9 +47,18 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             } else if (bigScreen[bigScreen.length - 1] == "[") {
               bracketsCount--;
             } else if (bigScreen[bigScreen.length - 1] == "]") {
-              bracketsCount++;
+              while (bigScreen[bigScreen.length - 1] != "[") {
+                bigScreen = bigScreen.substring(0, bigScreen.length - 1);
+              }
             }
             bigScreen = bigScreen.substring(0, bigScreen.length - 1);
+            TextSpan lastElement = textSpans.removeLast();
+            if (lastElement.children != null) {
+              while (bigScreen != "" &&
+                  num.tryParse(bigScreen[bigScreen.length - 1]) != null) {
+                bigScreen = bigScreen.substring(0, bigScreen.length - 1);
+              }
+            }
           }
           break;
         case '+':
@@ -50,24 +66,28 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             calculateResult();
           }
           bigScreen = '$bigScreen+';
+          textSpans.add(const TextSpan(text: '+'));
           break;
         case '-':
           if (parenthesisCount == 0 && bracketsCount == 0) {
             calculateResult();
           }
           bigScreen = '$bigScreen-';
+          textSpans.add(const TextSpan(text: '-'));
           break;
         case 'x':
           if (parenthesisCount == 0 && bracketsCount == 0) {
             calculateResult();
           }
           bigScreen = '$bigScreen*';
+          textSpans.add(const TextSpan(text: '*'));
           break;
         case '/':
           if (parenthesisCount == 0 && bracketsCount == 0) {
             calculateResult();
           }
           bigScreen = '$bigScreen/';
+          textSpans.add(const TextSpan(text: '/'));
           break;
         case '=':
           try {
@@ -85,23 +105,53 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             } else {
               bigScreen = bigScreen + text;
             }
+            textSpans.add(const TextSpan(text: '.'));
           }
           break;
         case '(':
           parenthesisCount++;
           bigScreen = '$bigScreen(';
+          textSpans.add(const TextSpan(text: '('));
           break;
         case ')':
           parenthesisCount--;
           bigScreen = '$bigScreen)';
+          textSpans.add(const TextSpan(text: ')'));
           break;
         case '[':
           bracketsCount++;
           bigScreen = '$bigScreen[';
+          textSpans.add(const TextSpan(text: '['));
           break;
         case ']':
           bracketsCount--;
           bigScreen = '$bigScreen]';
+          List<String?> tokens = [];
+          while (textSpans.last.text != "[") {
+            TextSpan previous = textSpans.removeLast();
+            tokens.add(previous.text);
+          }
+          textSpans.removeLast();
+          String fraction = "";
+          while (tokens.isNotEmpty) {
+            String? token = tokens.removeLast();
+            fraction = fraction + token!;
+          }
+          textSpans.add(
+            TextSpan(
+              text: fraction,
+              style: const TextStyle(
+                fontFeatures: <FontFeature>[
+                  FontFeature.fractions(),
+                ],
+              ),
+            ),
+          );
+          break;
+        case 'Pow':
+          waitingForPow = true;
+          bigScreen = '$bigScreen^';
+          textSpans.add(const TextSpan(text: '^'));
           break;
         default:
           if (bigScreen == '') {
@@ -109,11 +159,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           } else {
             bigScreen = bigScreen + text;
           }
+          textSpans.add(TextSpan(text: text));
       }
     });
   }
 
   void calculateResult() {
+    if (waitingForPow) checkPow();
     ArithmeticExpression expression = ArithmeticExpression(bigScreen);
     Fraction resultFraction = expression.evaluateExpression();
     result = resultFraction.toNum();
@@ -122,6 +174,57 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     } else {
       smallScreen = '$result';
     }
+  }
+
+  void checkPow() {
+    waitingForPow = false;
+    List<String> tokens = [];
+    while (bigScreen != "" &&
+        num.tryParse(bigScreen[bigScreen.length - 1]) != null) {
+      tokens.add(bigScreen[bigScreen.length - 1]);
+      bigScreen = bigScreen.substring(0, bigScreen.length - 1);
+      textSpans.removeLast();
+    }
+    String num2 = "";
+    while (tokens.isNotEmpty) {
+      String token = tokens.removeLast();
+      num2 = num2 + token;
+    }
+
+    bigScreen = bigScreen.substring(0, bigScreen.length - 1);
+    textSpans.removeLast();
+
+    while (bigScreen != "" &&
+        num.tryParse(bigScreen[bigScreen.length - 1]) != null) {
+      tokens.add(bigScreen[bigScreen.length - 1]);
+      bigScreen = bigScreen.substring(0, bigScreen.length - 1);
+      textSpans.removeLast();
+    }
+    String num1 = "";
+    while (tokens.isNotEmpty) {
+      String token = tokens.removeLast();
+      num1 = num1 + token;
+    }
+
+    bigScreen =
+        '$bigScreen${int.parse(num1).toFraction().pow(int.parse(num2))}';
+    textSpans.add(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: num1,
+          ),
+          TextSpan(
+            text: num2,
+            style: const TextStyle(
+              fontFeatures: [
+                FontFeature.enable('sups'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -160,10 +263,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     color: Colors.white,
                     fontWeight: FontWeight.w400,
                     fontSize: 30,
-                    fontFamily: 'Ubuntu Mono',
-                    fontFeatures: <FontFeature>[
-                      FontFeature.fractions(),
-                    ],
                   ),
                 ),
               ),
@@ -181,16 +280,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 //for horizontal scrolling
                 scrollDirection: Axis.horizontal,
                 reverse: true,
-                child: Text(
-                  bigScreen,
-                  style: const TextStyle(
-                    color: Colors.lightBlueAccent,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 70,
-                    fontFamily: 'Ubuntu Mono',
-                    fontFeatures: <FontFeature>[
-                      FontFeature.fractions(),
-                    ],
+                child: RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                      color: Colors.lightBlueAccent,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 70,
+                    ),
+                    children: <TextSpan>[...textSpans],
                   ),
                 ),
               ),
