@@ -20,6 +20,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   int bracketsCount = 0;
 
   bool waitingForPow = false;
+  bool showAsFraction = false;
 
   num result = 0;
 
@@ -157,10 +158,26 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             ),
           );
           break;
-        case 'Pow':
+        case 'pow':
           waitingForPow = true;
           bigScreen = '$bigScreen^';
           textSpans.add(const TextSpan(text: '^'));
+          break;
+        case 'frac':
+          if (showAsFraction) {
+            try {
+              smallScreen = double.parse(
+                      Fraction.fromString(smallScreen).toNum().toString())
+                  .toString();
+            } catch (e) {
+              smallScreen = smallScreen;
+            }
+            showAsFraction = false;
+          } else {
+            smallScreen =
+                Fraction.fromDouble(double.parse(smallScreen)).toString();
+            showAsFraction = true;
+          }
           break;
         default:
           if (bigScreen == '') {
@@ -178,22 +195,27 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     ArithmeticExpression expression = ArithmeticExpression(bigScreen);
     Fraction resultFraction = expression.evaluateExpression();
     result = resultFraction.toNum();
-    if (result % 1 == 0) {
-      smallScreen = '${result.toInt()}';
+    if (showAsFraction) {
+      smallScreen = resultFraction.toString();
     } else {
-      smallScreen = '$result';
+      if (result % 1 == 0) {
+        smallScreen = '${result.toInt()}';
+      } else {
+        smallScreen = '$result';
+      }
     }
   }
 
   void checkPow() {
     waitingForPow = false;
-    List<dynamic> tokens = [];
+    List<String> tokens = [];
     while (bigScreen != "" &&
         num.tryParse(bigScreen[bigScreen.length - 1]) != null) {
       tokens.add(bigScreen[bigScreen.length - 1]);
       bigScreen = bigScreen.substring(0, bigScreen.length - 1);
       textSpans.removeLast();
     }
+
     String num2 = "";
     while (tokens.isNotEmpty) {
       String token = tokens.removeLast();
@@ -222,6 +244,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         textSpans.removeLast();
       }
     }
+
     String num1 = "";
     while (tokens.isNotEmpty) {
       String token = tokens.removeLast();
@@ -245,6 +268,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         children: [
           TextSpan(
             text: num1,
+            style: parsedNum1 is Fraction
+                ? const TextStyle(
+                    fontFeatures: <FontFeature>[
+                      FontFeature.fractions(),
+                    ],
+                  )
+                : const TextStyle(),
           ),
           TextSpan(
             text: num2,
@@ -368,7 +398,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       sups: "2",
                       text: "X",
                       backgroundColor: Colors.lightBlueAccent,
-                      onPressed: () => onPress("Pow"),
+                      onPressed: () => onPress("pow"),
                     ),
                     CalculatorBtn(
                       text: "[",
@@ -478,9 +508,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CalculatorBtn(
-                      text: "+/-",
+                      text: ".",
                       backgroundColor: Colors.white12,
-                      onPressed: () => onPress("+/-"),
+                      onPressed: () => onPress("."),
                     ),
                     CalculatorBtn(
                       text: "0",
@@ -488,9 +518,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       onPressed: () => onPress("0"),
                     ),
                     CalculatorBtn(
-                      text: ".",
-                      backgroundColor: Colors.white12,
-                      onPressed: () => onPress("."),
+                      frac: "2",
+                      text: "1",
+                      backgroundColor: Colors.lightBlueAccent,
+                      onPressed: () => onPress("frac"),
                     ),
                     CalculatorBtn(
                       text: "=",
@@ -509,6 +540,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 class CalculatorBtn extends StatelessWidget {
   final IconData? icon;
   final String? sups;
+  final String? frac;
   final String text;
   final Color backgroundColor;
   final VoidCallback? onPressed;
@@ -516,6 +548,7 @@ class CalculatorBtn extends StatelessWidget {
   const CalculatorBtn({
     this.icon,
     this.sups = '',
+    this.frac = '',
     this.text = '',
     required this.backgroundColor,
     this.onPressed,
@@ -562,15 +595,28 @@ class CalculatorBtn extends StatelessWidget {
                       ],
                     ),
                   )
-                : Text(
-                    text,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'RobotoCondensed',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 30,
-                    ),
-                  ),
+                : (frac != '')
+                    ? Text(
+                        '$text/$frac',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'RobotoCondensed',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 30,
+                          fontFeatures: <FontFeature>[
+                            FontFeature.fractions(),
+                          ],
+                        ),
+                      )
+                    : Text(
+                        text,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'RobotoCondensed',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 30,
+                        ),
+                      ),
       ),
     );
   }
