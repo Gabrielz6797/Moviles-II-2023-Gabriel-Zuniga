@@ -90,13 +90,19 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           textSpans.add(const TextSpan(text: '/'));
           break;
         case '=':
-          try {
-            calculateResult();
-          } catch (e) {
-            if (e.toString().split('Exception: ')[1] !=
-                'Expression can not be empty') {
-              smallScreen = 'Error: ${e.toString().split("Exception: ")[1]}';
+          if (bigScreen != '') {
+            try {
+              calculateResult();
+            } on RangeError {
+              smallScreen = 'Error: Internal error occurred';
+            } catch (e) {
+              if (e.toString().split('Exception: ')[1] !=
+                  'Expression can not be empty') {
+                smallScreen = 'Error: ${e.toString().split("Exception: ")[1]}';
+              }
             }
+          } else {
+            smallScreen = '';
           }
           break;
         case '.':
@@ -181,7 +187,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   void checkPow() {
     waitingForPow = false;
-    List<String> tokens = [];
+    List<dynamic> tokens = [];
     while (bigScreen != "" &&
         num.tryParse(bigScreen[bigScreen.length - 1]) != null) {
       tokens.add(bigScreen[bigScreen.length - 1]);
@@ -197,11 +203,24 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     bigScreen = bigScreen.substring(0, bigScreen.length - 1);
     textSpans.removeLast();
 
+    bool isInsideBrackets = false;
+
+    if (bigScreen[bigScreen.length - 1] == "]") {
+      isInsideBrackets = true;
+      bigScreen = bigScreen.substring(0, bigScreen.length - 1);
+    }
+
     while (bigScreen != "" &&
-        num.tryParse(bigScreen[bigScreen.length - 1]) != null) {
+            (num.tryParse(bigScreen[bigScreen.length - 1]) != null) ||
+        isInsideBrackets) {
       tokens.add(bigScreen[bigScreen.length - 1]);
       bigScreen = bigScreen.substring(0, bigScreen.length - 1);
-      textSpans.removeLast();
+      if (!isInsideBrackets) textSpans.removeLast();
+      if (bigScreen != "" && bigScreen[bigScreen.length - 1] == "[") {
+        isInsideBrackets = false;
+        bigScreen = bigScreen.substring(0, bigScreen.length - 1);
+        textSpans.removeLast();
+      }
     }
     String num1 = "";
     while (tokens.isNotEmpty) {
@@ -209,8 +228,18 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       num1 = num1 + token;
     }
 
-    bigScreen =
-        '$bigScreen${int.parse(num1).toFraction().pow(int.parse(num2))}';
+    dynamic parsedNum1 = 0;
+
+    try {
+      parsedNum1 = double.parse(num1);
+    } catch (e) {
+      parsedNum1 = num1.toFraction();
+    }
+
+    bigScreen = parsedNum1 is double
+        ? '$bigScreen${double.parse(num1).toFraction().pow(int.parse(num2))}'
+        : '$bigScreen${num1.toFraction().pow(int.parse(num2))}';
+
     textSpans.add(
       TextSpan(
         children: [
@@ -336,7 +365,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CalculatorBtn(
-                      text: "Pow",
+                      sups: "2",
+                      text: "X",
                       backgroundColor: Colors.lightBlueAccent,
                       onPressed: () => onPress("Pow"),
                     ),
@@ -478,12 +508,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
 class CalculatorBtn extends StatelessWidget {
   final IconData? icon;
+  final String? sups;
   final String text;
   final Color backgroundColor;
   final VoidCallback? onPressed;
 
   const CalculatorBtn({
     this.icon,
+    this.sups = '',
     this.text = '',
     required this.backgroundColor,
     this.onPressed,
@@ -505,15 +537,40 @@ class CalculatorBtn extends StatelessWidget {
         ),
         child: (icon != null)
             ? Icon(icon, size: 35, color: Colors.white)
-            : Text(
-                text,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'RobotoCondensed',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 30,
-                ),
-              ),
+            : (sups != '')
+                ? RichText(
+                    text: TextSpan(
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'RobotoCondensed',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 30,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: text,
+                        ),
+                        TextSpan(
+                          text: sups,
+                          style: const TextStyle(
+                            fontFamily: 'Ubuntu',
+                            fontFeatures: [
+                              FontFeature.enable('sups'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Text(
+                    text,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'RobotoCondensed',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 30,
+                    ),
+                  ),
       ),
     );
   }
