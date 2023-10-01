@@ -1,5 +1,5 @@
 name: calculator_app
-description: A new Flutter project.
+description: A calculator that can handle fractions.
 publish_to: "none"
 version: 0.1.0
 
@@ -9,6 +9,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_launcher_icons: "^0.13.1"
+
+flutter_launcher_icons:
+  image_path: "assets/images/icons8-calculator-100.png"
+  android: true # can specify file name here e.g. "ic_launcher"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  # use 'flutter pub get' and 'flutter pub run flutter_launcher_icons' to generate icon
 
 dev_dependencies:
   flutter_test:
