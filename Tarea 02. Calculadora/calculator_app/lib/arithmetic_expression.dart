@@ -205,7 +205,7 @@ class ArithmeticExpression {
         try {
           return Fraction.fromDouble(double.parse(node.value));
         } on FormatException {
-          throw ExpressionException("Invalid value found: ${node.value}'");
+          throw ExpressionException("Invalid value found: '${node.value}'");
         }
       } else {
         return Fraction(int.parse(node.value), 1);

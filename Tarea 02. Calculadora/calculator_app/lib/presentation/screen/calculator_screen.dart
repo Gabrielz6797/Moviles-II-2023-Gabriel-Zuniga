@@ -93,7 +93,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           try {
             calculateResult();
           } catch (e) {
-            smallScreen = 'Error: ${e.toString().split(':')[1]}';
+            if (e.toString().split('Exception: ')[1] !=
+                'Expression can not be empty') {
+              smallScreen = 'Error: ${e.toString().split("Exception: ")[1]}';
+            }
           }
           break;
         case '.':
@@ -217,6 +220,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           TextSpan(
             text: num2,
             style: const TextStyle(
+              fontFamily: 'Ubuntu',
               fontFeatures: [
                 FontFeature.enable('sups'),
               ],
@@ -261,6 +265,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   smallScreen,
                   style: const TextStyle(
                     color: Colors.white,
+                    fontFamily: 'RobotoCondensed',
                     fontWeight: FontWeight.w400,
                     fontSize: 30,
                   ),
@@ -284,6 +289,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   text: TextSpan(
                     style: const TextStyle(
                       color: Colors.lightBlueAccent,
+                      fontFamily: 'RobotoCondensed',
                       fontWeight: FontWeight.w400,
                       fontSize: 70,
                     ),
@@ -503,6 +509,7 @@ class CalculatorBtn extends StatelessWidget {
                 text,
                 style: const TextStyle(
                   color: Colors.white,
+                  fontFamily: 'RobotoCondensed',
                   fontWeight: FontWeight.w500,
                   fontSize: 30,
                 ),

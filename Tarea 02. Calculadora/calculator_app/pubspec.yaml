@@ -1,10 +1,10 @@
 name: calculator_app
 description: A new Flutter project.
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.1.0 <4.0.0'
+  sdk: ">=3.1.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -17,3 +17,55 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: PixelifySans
+      fonts:
+        - asset: fonts/PixelifySans/static/PixelifySans-Regular.ttf
+          weight: 400
+        - asset: fonts/PixelifySans/static/PixelifySans-Medium.ttf
+          weight: 500
+        - asset: fonts/PixelifySans/static/PixelifySans-SemiBold.ttf
+          weight: 600
+        - asset: fonts/PixelifySans/static/PixelifySans-Bold.ttf
+          weight: 700
+    - family: RobotoCondensed
+      fonts:
+        - asset: fonts/RobotoCondensed/RobotoCondensed-Light.ttf
+          weight: 300
+        - asset: fonts/RobotoCondensed/RobotoCondensed-Regular.ttf
+          weight: 400
+        - asset: fonts/RobotoCondensed/RobotoCondensed-Bold.ttf
+          weight: 700
+        - asset: fonts/RobotoCondensed/RobotoCondensed-LightItalic.ttf
+          style: italic
+          weight: 300
+        - asset: fonts/RobotoCondensed/RobotoCondensed-Italic.ttf
+          style: italic
+          weight: 400
+        - asset: fonts/RobotoCondensed/RobotoCondensed-BoldItalic.ttf
+          style: italic
+          weight: 700
+    - family: Ubuntu
+      fonts:
+        - asset: fonts/Ubuntu/Ubuntu-Light.ttf
+          weight: 300
+        - asset: fonts/Ubuntu/Ubuntu-Regular.ttf
+          weight: 400
+        - asset: fonts/Ubuntu/Ubuntu-Medium.ttf
+          weight: 500
+        - asset: fonts/Ubuntu/Ubuntu-Bold.ttf
+          weight: 700
+        - asset: fonts/Ubuntu/Ubuntu-LightItalic.ttf
+          style: italic
+          weight: 300
+        - asset: fonts/Ubuntu/Ubuntu-Italic.ttf
+          style: italic
+          weight: 400
+        - asset: fonts/Ubuntu/Ubuntu-MediumItalic.ttf
+          weight: 500
+        - asset: fonts/Ubuntu/Ubuntu-BoldItalic.ttf
+          style: italic
+          weight: 700
+    - family: Unifont
+      fonts:
+        - asset: fonts/Unifont/unifont-15.1.02.otf
