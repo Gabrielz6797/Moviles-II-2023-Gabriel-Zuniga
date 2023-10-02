@@ -270,8 +270,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     bigScreen = parsedNum1 is int
         ? '$bigScreen${int.parse(num1).toFraction().pow(int.parse(num2))}'
         : parsedNum1 is double
-            ? '[$bigScreen${double.parse(num1).toFraction().pow(int.parse(num2))}]'
-            : '[$bigScreen${num1.toFraction().pow(int.parse(num2))}]';
+            ? '$bigScreen[${double.parse(num1).toFraction().pow(int.parse(num2))}]'
+            : '$bigScreen[${num1.toFraction().pow(int.parse(num2))}]';
 
     textSpans.add(
       TextSpan(
