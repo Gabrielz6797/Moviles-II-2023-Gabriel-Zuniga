@@ -16,18 +16,8 @@ class CourseAddModifyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => CourseCubit(),
-        ),
-        BlocProvider(
-          create: (context) => ProfessorCubit(),
-        ),
-      ],
-      child: _CourseAddModifyScreen(
-        id: id,
-      ),
+    return _CourseAddModifyScreen(
+      id: id,
     );
   }
 }
@@ -102,6 +92,16 @@ class _CourseFormViewState extends State<_CourseFormView> {
   void initState() {
     super.initState();
     context.read<ProfessorCubit>().getProfessors();
+
+    if (widget.id != null) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        String code = context.read<CourseCubit>().state.code;
+        String name = context.read<CourseCubit>().state.name;
+
+        _codeController.text = code;
+        _nameController.text = name;
+      });
+    }
   }
 
   @override
@@ -156,26 +156,6 @@ class _CourseFormViewState extends State<_CourseFormView> {
       );
     }
 
-    if (widget.id != null) {
-      String code = context.read<CourseCubit>().state.code;
-      String name = context.read<CourseCubit>().state.name;
-      int? professorId;
-      try {
-        professorId = context.read<CourseCubit>().state.professor[0].id;
-      } catch (e) {
-        // Nothing
-      }
-      _codeController.text = code;
-      _nameController.text = name;
-
-      for (int index = 0; index < professors.length; index++) {
-        if (professors[index].id == professorId) {
-          professorArrayPosition = index;
-          break;
-        }
-      }
-    }
-
     final border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(30),
       borderSide: BorderSide(
@@ -183,121 +163,141 @@ class _CourseFormViewState extends State<_CourseFormView> {
       ),
     );
 
-    return Form(
-      key: _keyForm,
-      child: Column(
-        children: [
-          CustomTextFormField(
-            controller: _codeController,
-            label: 'Código',
-            hintText: 'Agregue el código',
-            icon: Icons.code_rounded,
-            validator: _validateCode,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp('[A-Z0-9\\-\\s]')),
-            ],
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          CustomTextFormField(
-            controller: _nameController,
-            label: 'Nombre',
-            hintText: 'Agregue el nombre',
-            icon: Icons.calendar_today_rounded,
-            validator: _validateName,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9\\-\\s]')),
-            ],
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Row(
+    Future<void> wait() async {
+      if (widget.id != null) {
+        int? professorId;
+
+        professorId = context.read<CourseCubit>().state.professor[0].id;
+
+        for (int index = 0; index < professors.length; index++) {
+          if (professors[index].id == professorId) {
+            professorArrayPosition = index;
+            break;
+          }
+        }
+      }
+    }
+
+    return FutureBuilder(
+      future: wait(),
+      initialData: null,
+      builder: (BuildContext context, AsyncSnapshot<void> text) {
+        return Form(
+          key: _keyForm,
+          child: Column(
             children: [
-              Expanded(
-                child: DropdownMenu<int>(
-                  dropdownMenuEntries: professorEntries,
-                  initialSelection: professorArrayPosition,
-                  inputDecorationTheme: InputDecorationTheme(
-                    isDense: true,
-                    enabledBorder: border,
-                    focusedBorder: border.copyWith(
-                      borderSide: BorderSide(
-                        color: colors.primaryContainer,
-                        width: 2,
+              CustomTextFormField(
+                controller: _codeController,
+                label: 'Código',
+                hintText: 'Agregue el código',
+                icon: Icons.code_rounded,
+                validator: _validateCode,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp('[A-Z0-9\\-\\s]')),
+                ],
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              CustomTextFormField(
+                controller: _nameController,
+                label: 'Nombre',
+                hintText: 'Agregue el nombre',
+                icon: Icons.calendar_today_rounded,
+                validator: _validateName,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp('[a-zA-Z0-9\\-\\s]')),
+                ],
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownMenu<int>(
+                      dropdownMenuEntries: professorEntries,
+                      initialSelection: professorArrayPosition,
+                      inputDecorationTheme: InputDecorationTheme(
+                        isDense: true,
+                        enabledBorder: border,
+                        focusedBorder: border.copyWith(
+                          borderSide: BorderSide(
+                            color: colors.primaryContainer,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                      width: MediaQuery.of(context).size.width - 30,
+                      leadingIcon: const Icon(Icons.school_rounded),
+                      label: const Text('Profesor'),
+                      onSelected: (value) {
+                        setState(() {
+                          professorSelected = value;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FilledButton(
+                    onPressed: () {
+                      bool isValid = _keyForm.currentState!.validate();
+                      if (isValid) {
+                        Course course;
+                        if (professorSelected != null &&
+                            professorSelected != -1) {
+                          course = Course()
+                            ..code = _codeController.text
+                            ..name = _nameController.text
+                            ..professor.removeAll(professors)
+                            ..professor
+                                .addAll([professors[professorSelected!]]);
+                        } else {
+                          course = Course()
+                            ..code = _codeController.text
+                            ..name = _nameController.text
+                            ..professor.removeAll(professors);
+                        }
+                        if (widget.id != null) course.id = widget.id;
+                        courseCubit.addCourse(course);
+                        _clearForm();
+                        context.pop();
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.save),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text((widget.id == null) ? 'Guardar' : 'Modificar')
+                        ],
                       ),
                     ),
                   ),
-                  width: MediaQuery.of(context).size.width - 30,
-                  leadingIcon: const Icon(Icons.school_rounded),
-                  label: const Text('Profesor'),
-                  onSelected: (value) {
-                    setState(() {
-                      professorSelected = value;
-                    });
-                  },
-                ),
+                ],
+              ),
+              const SizedBox(
+                height: 15,
               ),
             ],
           ),
-          const SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FilledButton(
-                onPressed: () {
-                  bool isValid = _keyForm.currentState!.validate();
-                  if (isValid) {
-                    Course course;
-                    if (professorSelected != null && professorSelected != -1) {
-                      course = Course()
-                        ..code = _codeController.text
-                        ..name = _nameController.text
-                        ..professor.removeAll(professors)
-                        ..professor.addAll([professors[professorSelected!]]);
-                    } else {
-                      course = Course()
-                        ..code = _codeController.text
-                        ..name = _nameController.text
-                        ..professor.removeAll(professors);
-                    }
-                    if (widget.id != null) course.id = widget.id;
-                    try {
-                      courseCubit.addCourse(course);
-                    } catch (e) {
-                      // Nothing
-                    }
-                    _clearForm();
-                    context.pop();
-                  }
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.save),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text((widget.id == null) ? 'Guardar' : 'Modificar')
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

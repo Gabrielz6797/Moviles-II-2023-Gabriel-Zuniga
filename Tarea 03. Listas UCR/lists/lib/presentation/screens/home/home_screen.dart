@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lists/presentation/blocs.dart';
 import 'package:lists/presentation/widgets.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -8,20 +6,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => ProfessorCubit(),
-        ),
-        BlocProvider(
-          create: (context) => CourseCubit(),
-        ),
-        BlocProvider(
-          create: (context) => StudentCubit(),
-        ),
-      ],
-      child: const _HomeScreen(),
-    );
+    return const _HomeScreen();
   }
 }
 

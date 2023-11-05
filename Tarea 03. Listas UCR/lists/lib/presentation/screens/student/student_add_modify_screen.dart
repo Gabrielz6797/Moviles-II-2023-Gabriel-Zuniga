@@ -17,18 +17,8 @@ class StudentAddModifyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => StudentCubit(),
-        ),
-        BlocProvider(
-          create: (context) => CourseCubit(),
-        ),
-      ],
-      child: _StudentAddModifyScreen(
-        id: id,
-      ),
+    return _StudentAddModifyScreen(
+      id: id,
     );
   }
 }
@@ -106,6 +96,20 @@ class _StudentFormViewState extends State<_StudentFormView> {
   void initState() {
     super.initState();
     context.read<CourseCubit>().getCourses();
+
+    if (widget.id != null) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        String studentId = context.read<StudentCubit>().state.studentId;
+        String firstName = context.read<StudentCubit>().state.firstName;
+        String lastName = context.read<StudentCubit>().state.lastName;
+        String email = context.read<StudentCubit>().state.email;
+
+        _studentIdController.text = studentId;
+        _firstNameController.text = firstName;
+        _lastNameController.text = lastName;
+        _emailController.text = email;
+      });
+    }
   }
 
   @override
@@ -157,17 +161,6 @@ class _StudentFormViewState extends State<_StudentFormView> {
           studentCoursesEntries.add(coursesEntries[index]);
         }
       }
-    }
-
-    if (widget.id != null) {
-      String studentId = context.read<StudentCubit>().state.studentId;
-      String firstName = context.read<StudentCubit>().state.firstName;
-      String lastName = context.read<StudentCubit>().state.lastName;
-      String email = context.read<StudentCubit>().state.email;
-      _studentIdController.text = studentId;
-      _firstNameController.text = firstName;
-      _lastNameController.text = lastName;
-      _emailController.text = email;
     }
 
     void selectCourse(List<ValueItem> selectedOptions) {

@@ -13,18 +13,8 @@ class ProfessorDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => ProfessorCubit(),
-        ),
-        BlocProvider(
-          create: (context) => CourseCubit(),
-        ),
-      ],
-      child: _ProfessorDetailsView(
-        id: id,
-      ),
+    return _ProfessorDetailsView(
+      id: id,
     );
   }
 }

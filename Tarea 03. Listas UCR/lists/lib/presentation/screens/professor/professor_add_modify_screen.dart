@@ -16,15 +16,8 @@ class ProfessorAddModifyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => ProfessorCubit(),
-        ),
-      ],
-      child: _ProfessorAddModifyScreen(
-        id: id,
-      ),
+    return _ProfessorAddModifyScreen(
+      id: id,
     );
   }
 }
@@ -95,6 +88,21 @@ class _ProfessorFormViewState extends State<_ProfessorFormView> {
   final _lastNameController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+
+    if (widget.id != null) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        String firstName = context.read<ProfessorCubit>().state.firstName;
+        String lastName = context.read<ProfessorCubit>().state.lastName;
+
+        _firstNameController.text = firstName;
+        _lastNameController.text = lastName;
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
@@ -116,13 +124,6 @@ class _ProfessorFormViewState extends State<_ProfessorFormView> {
   @override
   Widget build(BuildContext context) {
     final professorCubit = context.watch<ProfessorCubit>();
-
-    if (widget.id != null) {
-      String firstName = context.read<ProfessorCubit>().state.firstName;
-      String lastName = context.read<ProfessorCubit>().state.lastName;
-      _firstNameController.text = firstName;
-      _lastNameController.text = lastName;
-    }
 
     return Form(
       key: _keyForm,
