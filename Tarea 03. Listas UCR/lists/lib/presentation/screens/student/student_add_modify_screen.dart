@@ -136,7 +136,10 @@ class _StudentFormViewState extends State<_StudentFormView> {
     final colors = Theme.of(context).colorScheme;
     final studentCubit = context.watch<StudentCubit>();
     final List<Course> courses = context.watch<CourseCubit>().state.courses;
+    final List<Course> studentCourses =
+        context.watch<StudentCubit>().state.courses;
     final List<ValueItem> coursesEntries = <ValueItem>[];
+    final List<ValueItem> studentCoursesEntries = <ValueItem>[];
     List<Course> selectedCourses = [];
 
     for (int index = 0; index < courses.length; index++) {
@@ -146,6 +149,14 @@ class _StudentFormViewState extends State<_StudentFormView> {
           label: '${courses[index].code}: ${courses[index].name}',
         ),
       );
+    }
+
+    for (int index = 0; index < courses.length; index++) {
+      for (int secIndex = 0; secIndex < studentCourses.length; secIndex++) {
+        if (studentCourses[secIndex].code == courses[index].code) {
+          studentCoursesEntries.add(coursesEntries[index]);
+        }
+      }
     }
 
     if (widget.id != null) {
@@ -228,6 +239,7 @@ class _StudentFormViewState extends State<_StudentFormView> {
               selectCourse(selectedOptions);
             },
             options: coursesEntries,
+            selectedOptions: studentCoursesEntries,
             selectionType: SelectionType.multi,
             chipConfig: const ChipConfig(wrapType: WrapType.scroll),
             dropdownHeight: 200,
