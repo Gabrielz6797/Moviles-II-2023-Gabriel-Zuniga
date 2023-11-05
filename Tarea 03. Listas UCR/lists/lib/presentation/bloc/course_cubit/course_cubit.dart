@@ -27,6 +27,7 @@ class CourseCubit extends Cubit<CourseState> {
         id: course.id,
         code: course.code,
         name: course.name,
+        professor: [course.professor.value].toList(),
       ),
     );
   }

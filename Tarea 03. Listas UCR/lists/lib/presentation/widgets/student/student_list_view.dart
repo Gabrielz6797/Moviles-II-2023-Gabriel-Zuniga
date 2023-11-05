@@ -60,7 +60,7 @@ class _StudentListViewState extends State<StudentListView> {
                       .deleteStudent(students[index].id!)
                       .then(
                         (value) => Future.delayed(
-                          const Duration(milliseconds: 250),
+                          const Duration(milliseconds: 500),
                           () => context.read<StudentCubit>().getStudents(),
                         ),
                       );
@@ -68,7 +68,7 @@ class _StudentListViewState extends State<StudentListView> {
                 onPressedEdit: () {
                   context.push('/modify-student/${students[index].id}').then(
                         (value) => Future.delayed(
-                          const Duration(milliseconds: 250),
+                          const Duration(milliseconds: 500),
                           () => context.read<StudentCubit>().getStudents(),
                         ),
                       );
@@ -87,7 +87,7 @@ class _StudentListViewState extends State<StudentListView> {
           onPressed: () {
             context.push('/add-student').then(
                   (value) => Future.delayed(
-                    const Duration(milliseconds: 250),
+                    const Duration(milliseconds: 500),
                     () => context.read<StudentCubit>().getStudents(),
                   ),
                 );

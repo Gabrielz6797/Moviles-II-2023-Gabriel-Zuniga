@@ -59,7 +59,7 @@ class _ProfessorListViewState extends State<ProfessorListView> {
                       .deleteProfessor(professors[index].id!)
                       .then(
                         (value) => Future.delayed(
-                          const Duration(milliseconds: 250),
+                          const Duration(milliseconds: 500),
                           () => context.read<ProfessorCubit>().getProfessors(),
                         ),
                       );
@@ -69,7 +69,7 @@ class _ProfessorListViewState extends State<ProfessorListView> {
                       .push('/modify-professor/${professors[index].id}')
                       .then(
                         (value) => Future.delayed(
-                          const Duration(milliseconds: 250),
+                          const Duration(milliseconds: 500),
                           () => context.read<ProfessorCubit>().getProfessors(),
                         ),
                       );
@@ -88,7 +88,7 @@ class _ProfessorListViewState extends State<ProfessorListView> {
           onPressed: () {
             context.push('/add-professor').then(
                   (value) => Future.delayed(
-                    const Duration(milliseconds: 250),
+                    const Duration(milliseconds: 500),
                     () => context.read<ProfessorCubit>().getProfessors(),
                   ),
                 );

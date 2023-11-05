@@ -95,7 +95,6 @@ class _CourseFormViewState extends State<_CourseFormView> {
   final GlobalKey<FormState> _keyForm = GlobalKey<FormState>();
   final _codeController = TextEditingController();
   final _nameController = TextEditingController();
-  final _professorController = TextEditingController();
 
   int? professorSelected;
 
@@ -109,14 +108,12 @@ class _CourseFormViewState extends State<_CourseFormView> {
   void dispose() {
     _codeController.dispose();
     _nameController.dispose();
-    _professorController.dispose();
     super.dispose();
   }
 
   void _clearForm() {
     _codeController.clear();
     _nameController.clear();
-    _professorController.clear();
   }
 
   String? _validateCode(String? value) {
@@ -135,12 +132,20 @@ class _CourseFormViewState extends State<_CourseFormView> {
 
   @override
   Widget build(BuildContext context) {
-    final courseCubit = context.watch<CourseCubit>();
     final colors = Theme.of(context).colorScheme;
+    final courseCubit = context.watch<CourseCubit>();
     final List<Professor> professors =
         context.watch<ProfessorCubit>().state.professors;
     final List<DropdownMenuEntry<int>> professorEntries =
         <DropdownMenuEntry<int>>[];
+    int professorArrayPosition = -1;
+
+    professorEntries.add(
+      const DropdownMenuEntry<int>(
+        value: -1,
+        label: 'Sin profesor',
+      ),
+    );
 
     for (int index = 0; index < professors.length; index++) {
       professorEntries.add(
@@ -154,8 +159,21 @@ class _CourseFormViewState extends State<_CourseFormView> {
     if (widget.id != null) {
       String code = context.read<CourseCubit>().state.code;
       String name = context.read<CourseCubit>().state.name;
+      int? professorId;
+      try {
+        professorId = context.read<CourseCubit>().state.professor[0]!.id;
+      } catch (e) {
+        // Nothing
+      }
       _codeController.text = code;
       _nameController.text = name;
+
+      for (int index = 0; index < professors.length; index++) {
+        if (professors[index].id == professorId) {
+          professorArrayPosition = index;
+          break;
+        }
+      }
     }
 
     final border = OutlineInputBorder(
@@ -176,7 +194,7 @@ class _CourseFormViewState extends State<_CourseFormView> {
             icon: Icons.code_rounded,
             validator: _validateCode,
             inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9\\-\\s]')),
+              FilteringTextInputFormatter.allow(RegExp('[A-Z0-9\\-\\s]')),
             ],
           ),
           const SizedBox(
@@ -198,28 +216,50 @@ class _CourseFormViewState extends State<_CourseFormView> {
           Row(
             children: [
               Expanded(
-                child: DropdownMenu<int>(
-                  controller: _professorController,
-                  dropdownMenuEntries: professorEntries,
-                  inputDecorationTheme: InputDecorationTheme(
-                    isDense: true,
-                    enabledBorder: border,
-                    focusedBorder: border.copyWith(
-                      borderSide: BorderSide(
-                        color: colors.primaryContainer,
-                        width: 2,
+                child: (professorArrayPosition != -1)
+                    ? DropdownMenu<int>(
+                        dropdownMenuEntries: professorEntries,
+                        initialSelection: professorArrayPosition,
+                        inputDecorationTheme: InputDecorationTheme(
+                          isDense: true,
+                          enabledBorder: border,
+                          focusedBorder: border.copyWith(
+                            borderSide: BorderSide(
+                              color: colors.primaryContainer,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                        width: MediaQuery.of(context).size.width - 30,
+                        leadingIcon: const Icon(Icons.school_rounded),
+                        label: const Text('Profesor'),
+                        onSelected: (value) {
+                          setState(() {
+                            professorSelected = value;
+                          });
+                        },
+                      )
+                    : DropdownMenu<int>(
+                        dropdownMenuEntries: professorEntries,
+                        inputDecorationTheme: InputDecorationTheme(
+                          isDense: true,
+                          enabledBorder: border,
+                          focusedBorder: border.copyWith(
+                            borderSide: BorderSide(
+                              color: colors.primaryContainer,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                        width: MediaQuery.of(context).size.width - 30,
+                        leadingIcon: const Icon(Icons.school_rounded),
+                        label: const Text('Profesor'),
+                        onSelected: (value) {
+                          setState(() {
+                            professorSelected = value;
+                          });
+                        },
                       ),
-                    ),
-                  ),
-                  width: MediaQuery.of(context).size.width - 30,
-                  leadingIcon: const Icon(Icons.school_rounded),
-                  label: const Text('Profesor'),
-                  onSelected: (value) {
-                    setState(() {
-                      professorSelected = value;
-                    });
-                  },
-                ),
               ),
             ],
           ),
@@ -233,12 +273,24 @@ class _CourseFormViewState extends State<_CourseFormView> {
                 onPressed: () {
                   bool isValid = _keyForm.currentState!.validate();
                   if (isValid) {
-                    Course course = Course()
-                      ..code = _codeController.text
-                      ..name = _nameController.text
-                      ..professor.value = professors[professorSelected!];
+                    Course course;
+                    if (professorSelected != null && professorSelected != -1) {
+                      course = Course()
+                        ..code = _codeController.text
+                        ..name = _nameController.text
+                        ..professor.value = professors[professorSelected!];
+                    } else {
+                      course = Course()
+                        ..code = _codeController.text
+                        ..name = _nameController.text
+                        ..professor.reset();
+                    }
                     if (widget.id != null) course.id = widget.id;
-                    courseCubit.addCourse(course);
+                    try {
+                      courseCubit.addCourse(course);
+                    } catch (e) {
+                      // Nothing
+                    }
                     _clearForm();
                     context.pop();
                   }

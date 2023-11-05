@@ -59,7 +59,7 @@ class _CourseListViewState extends State<CourseListView> {
                       .deleteCourse(courses[index].id!)
                       .then(
                         (value) => Future.delayed(
-                          const Duration(milliseconds: 250),
+                          const Duration(milliseconds: 500),
                           () => context.read<CourseCubit>().getCourses(),
                         ),
                       );
@@ -67,7 +67,7 @@ class _CourseListViewState extends State<CourseListView> {
                 onPressedEdit: () {
                   context.push('/modify-course/${courses[index].id}').then(
                         (value) => Future.delayed(
-                          const Duration(milliseconds: 250),
+                          const Duration(milliseconds: 500),
                           () => context.read<CourseCubit>().getCourses(),
                         ),
                       );
@@ -86,7 +86,7 @@ class _CourseListViewState extends State<CourseListView> {
           onPressed: () {
             context.push('/add-course').then(
                   (value) => Future.delayed(
-                    const Duration(milliseconds: 250),
+                    const Duration(milliseconds: 500),
                     () => context.read<CourseCubit>().getCourses(),
                   ),
                 );

@@ -126,9 +126,10 @@ class _CourseDetailsViewState extends State<_CourseDetailsView> {
           ListTile(
             leading: const Icon(Icons.school_rounded),
             title: const Text('Profesor'),
-            subtitle: Text(
-              '${courseProfessor.firstName} ${courseProfessor.lastName}',
-            ),
+            subtitle: Text((courseProfessor.firstName != null &&
+                    courseProfessor.lastName != null)
+                ? '${courseProfessor.firstName} ${courseProfessor.lastName}'
+                : 'Sin profesor asignado'),
           ),
           const SizedBox(
             height: 15,
