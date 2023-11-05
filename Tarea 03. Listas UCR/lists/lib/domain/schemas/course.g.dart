@@ -53,7 +53,7 @@ const CourseSchema = CollectionSchema(
       id: -7754016806614019448,
       name: r'professor',
       target: r'Professor',
-      single: true,
+      single: false,
     ),
     r'students': LinkSchema(
       id: 2157553606399243280,
@@ -707,9 +707,53 @@ extension CourseQueryLinks on QueryBuilder<Course, Course, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Course, Course, QAfterFilterCondition> professorIsNull() {
+  QueryBuilder<Course, Course, QAfterFilterCondition> professorLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'professor', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Course, Course, QAfterFilterCondition> professorIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'professor', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Course, Course, QAfterFilterCondition> professorIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'professor', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Course, Course, QAfterFilterCondition> professorLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'professor', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Course, Course, QAfterFilterCondition>
+      professorLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'professor', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Course, Course, QAfterFilterCondition> professorLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'professor', lower, includeLower, upper, includeUpper);
     });
   }
 

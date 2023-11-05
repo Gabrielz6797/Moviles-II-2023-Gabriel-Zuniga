@@ -5,7 +5,7 @@ class CourseState extends Equatable {
   final int id;
   final String code;
   final String name;
-  final List<Professor?> professor;
+  final List<Professor> professor;
 
   const CourseState({
     this.courses = const [],
@@ -20,7 +20,7 @@ class CourseState extends Equatable {
     int? id,
     String? code,
     String? name,
-    List<Professor?>? professor,
+    List<Professor>? professor,
   }) =>
       CourseState(
         courses: courses ?? this.courses,

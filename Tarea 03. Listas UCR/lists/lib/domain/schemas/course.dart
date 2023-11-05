@@ -13,7 +13,7 @@ class Course {
 
   String? name;
 
-  final professor = IsarLink<Professor>();
+  final professor = IsarLinks<Professor>();
 
   @Backlink(to: 'courses')
   final students = IsarLinks<Student>();

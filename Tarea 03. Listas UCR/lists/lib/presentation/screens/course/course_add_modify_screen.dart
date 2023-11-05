@@ -161,7 +161,7 @@ class _CourseFormViewState extends State<_CourseFormView> {
       String name = context.read<CourseCubit>().state.name;
       int? professorId;
       try {
-        professorId = context.read<CourseCubit>().state.professor[0]!.id;
+        professorId = context.read<CourseCubit>().state.professor[0].id;
       } catch (e) {
         // Nothing
       }
@@ -216,50 +216,28 @@ class _CourseFormViewState extends State<_CourseFormView> {
           Row(
             children: [
               Expanded(
-                child: (professorArrayPosition != -1)
-                    ? DropdownMenu<int>(
-                        dropdownMenuEntries: professorEntries,
-                        initialSelection: professorArrayPosition,
-                        inputDecorationTheme: InputDecorationTheme(
-                          isDense: true,
-                          enabledBorder: border,
-                          focusedBorder: border.copyWith(
-                            borderSide: BorderSide(
-                              color: colors.primaryContainer,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                        width: MediaQuery.of(context).size.width - 30,
-                        leadingIcon: const Icon(Icons.school_rounded),
-                        label: const Text('Profesor'),
-                        onSelected: (value) {
-                          setState(() {
-                            professorSelected = value;
-                          });
-                        },
-                      )
-                    : DropdownMenu<int>(
-                        dropdownMenuEntries: professorEntries,
-                        inputDecorationTheme: InputDecorationTheme(
-                          isDense: true,
-                          enabledBorder: border,
-                          focusedBorder: border.copyWith(
-                            borderSide: BorderSide(
-                              color: colors.primaryContainer,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                        width: MediaQuery.of(context).size.width - 30,
-                        leadingIcon: const Icon(Icons.school_rounded),
-                        label: const Text('Profesor'),
-                        onSelected: (value) {
-                          setState(() {
-                            professorSelected = value;
-                          });
-                        },
+                child: DropdownMenu<int>(
+                  dropdownMenuEntries: professorEntries,
+                  initialSelection: professorArrayPosition,
+                  inputDecorationTheme: InputDecorationTheme(
+                    isDense: true,
+                    enabledBorder: border,
+                    focusedBorder: border.copyWith(
+                      borderSide: BorderSide(
+                        color: colors.primaryContainer,
+                        width: 2,
                       ),
+                    ),
+                  ),
+                  width: MediaQuery.of(context).size.width - 30,
+                  leadingIcon: const Icon(Icons.school_rounded),
+                  label: const Text('Profesor'),
+                  onSelected: (value) {
+                    setState(() {
+                      professorSelected = value;
+                    });
+                  },
+                ),
               ),
             ],
           ),
@@ -278,12 +256,13 @@ class _CourseFormViewState extends State<_CourseFormView> {
                       course = Course()
                         ..code = _codeController.text
                         ..name = _nameController.text
-                        ..professor.value = professors[professorSelected!];
+                        ..professor.removeAll(professors)
+                        ..professor.addAll([professors[professorSelected!]]);
                     } else {
                       course = Course()
                         ..code = _codeController.text
                         ..name = _nameController.text
-                        ..professor.reset();
+                        ..professor.removeAll(professors);
                     }
                     if (widget.id != null) course.id = widget.id;
                     try {
