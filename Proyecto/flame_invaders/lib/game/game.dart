@@ -14,9 +14,9 @@ class FlameInvadersGame extends FlameGame with PanDetector {
   final double _joyStickRadius = 60;
   final double _joyStickCenterRadius = 20;
   final double _deadZoneRadius = 10;
-  final double _movementSpeed1Radius = 25;
-  final double _movementSpeed2Radius = 40;
-  final double _movementSpeed3Radius = 55;
+  final double _movementSpeed1MaxRadius = 25;
+  final double _movementSpeed2MaxRadius = 40;
+  final double _movementSpeed3MaxRadius = 55;
   final double _movementSpeed1 = 50;
   final double _movementSpeed2 = 100;
   final double _movementSpeed3 = 200;
@@ -33,7 +33,7 @@ class FlameInvadersGame extends FlameGame with PanDetector {
     );
 
     player = Player(
-      sprite: spriteSheet.getSpriteById(4),
+      sprite: spriteSheet.getSpriteById(17),
       size: Vector2(64, 64),
       position: Vector2(canvasSize[0] / 2, canvasSize[1] - 100),
     );
@@ -85,23 +85,26 @@ class FlameInvadersGame extends FlameGame with PanDetector {
     _pointerCurrentPosition = info.raw.globalPosition;
     var delta = _pointerCurrentPosition! - _pointerStartPosition!;
 
+    // Upddate direction
     if (delta.distance <= _deadZoneRadius) {
       player.setMoveDirection(Vector2.zero());
+    } else {
+      player.setMoveDirection(Vector2(delta.dx, delta.dy));
+    }
+
+    // Update speed
+    if (delta.distance <= _deadZoneRadius) {
       player.setMoveSpeed(0);
     } else if (delta.distance > _deadZoneRadius &&
-        delta.distance <= _movementSpeed1Radius) {
-      player.setMoveDirection(Vector2(delta.dx, delta.dy));
+        delta.distance <= _movementSpeed1MaxRadius) {
       player.setMoveSpeed(_movementSpeed1);
-    } else if (delta.distance > _movementSpeed1Radius &&
-        delta.distance <= _movementSpeed2Radius) {
-      player.setMoveDirection(Vector2(delta.dx, delta.dy));
+    } else if (delta.distance > _movementSpeed1MaxRadius &&
+        delta.distance <= _movementSpeed2MaxRadius) {
       player.setMoveSpeed(_movementSpeed2);
-    } else if (delta.distance > _movementSpeed2Radius &&
-        delta.distance <= _movementSpeed3Radius) {
-      player.setMoveDirection(Vector2(delta.dx, delta.dy));
+    } else if (delta.distance > _movementSpeed2MaxRadius &&
+        delta.distance <= _movementSpeed3MaxRadius) {
       player.setMoveSpeed(_movementSpeed3);
-    } else if (delta.distance > _movementSpeed3Radius) {
-      player.setMoveDirection(Vector2(delta.dx, delta.dy));
+    } else if (delta.distance > _movementSpeed3MaxRadius) {
       player.setMoveSpeed(_movementSpeed4);
     }
   }
