@@ -27,6 +27,7 @@ class PlayerBullet extends SpriteComponent
 
     if (other is Enemy && gameRef.enemy.entranceComplete) {
       removeFromParent();
+      gameRef.player.score += 1;
     }
   }
 

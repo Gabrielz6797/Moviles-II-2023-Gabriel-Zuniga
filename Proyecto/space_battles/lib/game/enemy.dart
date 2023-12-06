@@ -70,7 +70,7 @@ class Enemy extends SpriteComponent
           ),
         );
         gameRef.add(particleComponent);
-        gameRef.player.score += 10;
+        gameRef.player.score += 5;
       }
     }
   }
