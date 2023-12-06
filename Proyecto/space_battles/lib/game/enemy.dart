@@ -43,7 +43,7 @@ class Enemy extends SpriteComponent
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
 
-    if (other is PlayerBullet) {
+    if (other is PlayerBullet && entranceComplete) {
       removeFromParent();
 
       final particleComponent = ParticleSystemComponent(
@@ -77,8 +77,6 @@ class Enemy extends SpriteComponent
       Vector2(_maxPosition[0] - size[0], _maxPosition[1] / 2.2),
     );
 
-    entranceAnimation(size, _finalSize);
-
     if (entranceComplete) {
       final particleComponent = ParticleSystemComponent(
         particle: Particle.generate(
@@ -97,13 +95,15 @@ class Enemy extends SpriteComponent
       );
 
       gameRef.add(particleComponent);
+    } else {
+      entranceAnimation(size, _finalSize);
     }
   }
 
   entranceAnimation(Vector2 actualSize, Vector2 finalSize) {
     if (actualSize[0] < finalSize[0] && actualSize[1] < finalSize[1]) {
-      actualSize[0] = actualSize[0] + 2;
-      actualSize[1] = actualSize[1] + 2;
+      actualSize[0] = actualSize[0] + 1;
+      actualSize[1] = actualSize[1] + 1;
     } else {
       entranceComplete = true;
     }
