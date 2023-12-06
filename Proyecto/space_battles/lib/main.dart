@@ -8,7 +8,7 @@ void main() {
   Flame.device.fullScreen();
   runApp(
     GameWidget(
-      game: FlameInvadersGame(),
+      game: SpaceBattlesGame(),
     ),
   );
 }

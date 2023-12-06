@@ -11,7 +11,7 @@ import 'package:space_battles/game/player.dart';
 import 'package:space_battles/game/player_bullet.dart';
 import 'package:flutter/material.dart';
 
-class FlameInvadersGame extends FlameGame
+class SpaceBattlesGame extends FlameGame
     with PanDetector, TapDetector, HasCollisionDetection {
   late SpriteSheet _spriteSheet;
   late Player _player;
@@ -30,7 +30,8 @@ class FlameInvadersGame extends FlameGame
   final double _movementSpeed2 = 100;
   final double _movementSpeed3 = 200;
   final double _movementSpeed4 = 300;
-  final int _enemySpriteID = Random().nextInt(24);
+  int _enemySpriteID = Random().nextInt(24);
+  bool _enemySpawnPositionNegative = Random().nextBool();
   bool _playerDestroyed = false;
   bool _enemyDestroyed = false;
 
@@ -54,10 +55,11 @@ class FlameInvadersGame extends FlameGame
     add(_player);
 
     _enemy = Enemy(
-      sprite: _spriteSheet.getSpriteById(_enemySpriteID),
-      size: Vector2(64, 64),
-      position: Vector2(canvasSize[0] / 2, 100),
-    );
+        sprite: _spriteSheet.getSpriteById(_enemySpriteID),
+        size: Vector2(64, 64),
+        position: _enemySpawnPositionNegative
+            ? Vector2(canvasSize[0] / 2, 100) + Vector2.random() * -200
+            : Vector2(canvasSize[0] / 2, 100) + Vector2.random() * 200);
     _enemy.setMaxPosition(canvasSize);
     _enemy.anchor = Anchor.topCenter;
     add(_enemy);
@@ -191,17 +193,17 @@ class FlameInvadersGame extends FlameGame
 
   // Enemy
   void _enemyAction() {
-    int negativedx = Random().nextInt(2);
-    int negativedy = Random().nextInt(2);
-    int shoot = Random().nextInt(2);
+    bool negativedx = Random().nextBool();
+    bool negativedy = Random().nextBool();
+    bool shoot = Random().nextBool();
     double dx = Random().nextInt(60).toDouble();
     double dy = Random().nextInt(60).toDouble();
     double speed = Random().nextInt(5).toDouble();
 
-    if (negativedx == 1) {
+    if (negativedx) {
       dx = dx * -1;
     }
-    if (negativedy == 1) {
+    if (negativedy) {
       dy = dy * -1;
     }
 
@@ -218,21 +220,36 @@ class FlameInvadersGame extends FlameGame
     _enemy.setMoveDirection(Vector2(dx, dy));
     _enemy.setMoveSpeed(speed);
 
-    if (shoot == 1) {
-      EnemyBullet enemyBullet = EnemyBullet(
-        sprite: _spriteSheet.getSpriteById(28),
-        size: Vector2(64, 64),
-        position: _enemy.position,
-      );
-      enemyBullet.setMaxPosition(canvasSize[1]);
-      enemyBullet.anchor = Anchor.center;
-      add(enemyBullet);
+    if (_enemy.entranceComplete) {
+      if (shoot) {
+        EnemyBullet enemyBullet = EnemyBullet(
+          sprite: _spriteSheet.getSpriteById(28),
+          size: Vector2(64, 64),
+          position: _enemy.position,
+        );
+        enemyBullet.setMaxPosition(canvasSize[1]);
+        enemyBullet.anchor = Anchor.center;
+        add(enemyBullet);
+      }
     }
   }
 
   void _showGameOverMessage() {
+    _enemySpriteID = Random().nextInt(24);
+    _enemySpawnPositionNegative = Random().nextBool();
     if (!_playerDestroyed && _enemyDestroyed) {
-      print("You won!");
+      _enemy = Enemy(
+          sprite: _spriteSheet.getSpriteById(_enemySpriteID),
+          size: Vector2(64, 64),
+          position: _enemySpawnPositionNegative
+              ? Vector2(canvasSize[0] / 2, 100) + Vector2.random() * -200
+              : Vector2(canvasSize[0] / 2, 100) + Vector2.random() * 200);
+      _enemy.setMaxPosition(canvasSize);
+      _enemy.anchor = Anchor.topCenter;
+      add(_enemy);
+      _enemyDestroyed = false;
+      _enemyActionTimer.start();
+      _gameOverTimer.stop();
     } else if (_playerDestroyed && !_enemyDestroyed) {
       print("You lost...");
     } else if (_playerDestroyed && _enemyDestroyed) {
