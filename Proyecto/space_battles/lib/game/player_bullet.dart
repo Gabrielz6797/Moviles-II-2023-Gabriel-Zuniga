@@ -1,8 +1,10 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:space_battles/game/enemy.dart';
+import 'package:space_battles/game/game.dart';
 
-class PlayerBullet extends SpriteComponent with CollisionCallbacks {
+class PlayerBullet extends SpriteComponent
+    with CollisionCallbacks, HasGameRef<SpaceBattlesGame> {
   final double _speed = 450;
 
   PlayerBullet({
@@ -23,7 +25,7 @@ class PlayerBullet extends SpriteComponent with CollisionCallbacks {
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
 
-    if (other is Enemy) {
+    if (other is Enemy && gameRef.enemy.entranceComplete) {
       removeFromParent();
     }
   }

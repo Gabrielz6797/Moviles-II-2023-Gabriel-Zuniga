@@ -10,6 +10,9 @@ class Player extends SpriteComponent
   Vector2 _maxPosition = Vector2.zero();
   Vector2 _moveDirection = Vector2.zero();
   double _speed = 0;
+  int score = 0;
+  int health = 100;
+  final int _damageTaken = 5;
 
   Player({
     Sprite? sprite,
@@ -38,25 +41,31 @@ class Player extends SpriteComponent
     super.onCollision(intersectionPoints, other);
 
     if (other is EnemyBullet) {
-      removeFromParent();
-
-      final particleComponent = ParticleSystemComponent(
-        particle: Particle.generate(
-          count: 50,
-          lifespan: 5,
-          generator: (i) => AcceleratedParticle(
-            acceleration: getRandomVectorForExplosion(),
-            speed: getRandomVectorForExplosion(),
-            position: position.clone(),
-            child: CircleParticle(
-              radius: 2,
-              paint: Paint()..color = Colors.white,
+      if (health > _damageTaken) {
+        health = health - _damageTaken;
+      } else {
+        removeFromParent();
+        health = health - _damageTaken;
+        if (health < 0) {
+          health = 0;
+        }
+        final particleComponent = ParticleSystemComponent(
+          particle: Particle.generate(
+            count: 50,
+            lifespan: 5,
+            generator: (i) => AcceleratedParticle(
+              acceleration: getRandomVectorForExplosion(),
+              speed: getRandomVectorForExplosion(),
+              position: position.clone(),
+              child: CircleParticle(
+                radius: 2,
+                paint: Paint()..color = Colors.white,
+              ),
             ),
           ),
-        ),
-      );
-
-      gameRef.add(particleComponent);
+        );
+        gameRef.add(particleComponent);
+      }
     }
   }
 

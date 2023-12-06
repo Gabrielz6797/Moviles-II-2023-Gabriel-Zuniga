@@ -14,10 +14,12 @@ import 'package:flutter/material.dart';
 class SpaceBattlesGame extends FlameGame
     with PanDetector, TapDetector, HasCollisionDetection {
   late SpriteSheet _spriteSheet;
-  late Player _player;
-  late Enemy _enemy;
+  late Player player;
+  late Enemy enemy;
   late Timer _enemyActionTimer;
   late Timer _gameOverTimer;
+  late TextComponent _playerScore;
+  late TextComponent _playerHealth;
   Offset? _pointerStartPosition;
   Offset? _pointerCurrentPosition;
   final double _joyStickRadius = 60;
@@ -45,29 +47,55 @@ class SpaceBattlesGame extends FlameGame
       rows: 6,
     );
 
-    _player = Player(
+    player = Player(
       sprite: _spriteSheet.getSpriteById(17),
       size: Vector2(64, 64),
       position: Vector2(canvasSize[0] / 2, canvasSize[1] - 100),
     );
-    _player.setMaxPosition(canvasSize);
-    _player.anchor = Anchor.bottomCenter;
-    add(_player);
+    player.setMaxPosition(canvasSize);
+    player.anchor = Anchor.bottomCenter;
+    add(player);
 
-    _enemy = Enemy(
+    enemy = Enemy(
         sprite: _spriteSheet.getSpriteById(_enemySpriteID),
         size: Vector2(64, 64),
         position: _enemySpawnPositionNegative
             ? Vector2(canvasSize[0] / 2, 100) + Vector2.random() * -200
             : Vector2(canvasSize[0] / 2, 100) + Vector2.random() * 200);
-    _enemy.setMaxPosition(canvasSize);
-    _enemy.anchor = Anchor.topCenter;
-    add(_enemy);
+    enemy.setMaxPosition(canvasSize);
+    enemy.anchor = Anchor.topCenter;
+    add(enemy);
 
     _enemyActionTimer = Timer(0.5, onTick: _enemyAction, repeat: true);
     _enemyActionTimer.start();
 
     _gameOverTimer = Timer(1, onTick: _showGameOverMessage);
+
+    _playerScore = TextComponent(
+      text: 'Score: 0',
+      position: Vector2(10, size.y - 10),
+      textRenderer: TextPaint(
+        style: const TextStyle(
+          fontSize: 16,
+          color: Colors.white60,
+        ),
+      ),
+    );
+    _playerScore.anchor = Anchor.bottomLeft;
+    add(_playerScore);
+
+    _playerHealth = TextComponent(
+      text: 'Health: 100%',
+      position: Vector2(size.x - 10, size.y - 10),
+      textRenderer: TextPaint(
+        style: const TextStyle(
+          fontSize: 16,
+          color: Colors.white,
+        ),
+      ),
+    );
+    _playerHealth.anchor = Anchor.bottomRight;
+    add(_playerHealth);
   }
 
   // Update game state
@@ -77,28 +105,37 @@ class SpaceBattlesGame extends FlameGame
     _enemyActionTimer.update(dt);
     _gameOverTimer.update(dt);
 
-    if (_player.isRemoved && _playerDestroyed == false) {
-      _enemy.setMoveDirection(Vector2.zero());
-      _enemy.setMoveSpeed(0);
+    if (player.isRemoved && _playerDestroyed == false) {
+      enemy.setMoveDirection(Vector2.zero());
+      enemy.setMoveSpeed(0);
       _enemyActionTimer.stop();
       _playerDestroyed = true;
       _gameOverTimer.start();
     }
 
-    if (_enemy.isRemoved && _enemyDestroyed == false) {
-      _enemy.setMoveDirection(Vector2.zero());
-      _enemy.setMoveSpeed(0);
+    if (enemy.isRemoved && _enemyDestroyed == false) {
+      enemy.setMoveDirection(Vector2.zero());
+      enemy.setMoveSpeed(0);
       _enemyActionTimer.stop();
       _enemyDestroyed = true;
       _gameOverTimer.start();
     }
+
+    _playerScore.text = 'Score: ${player.score}';
+    _playerHealth.text = 'Health:\t\t${player.health}%';
   }
 
-  // Draw joystick
   @override
   void render(Canvas canvas) {
+    // Draw health bar
+    canvas.drawRect(
+      Rect.fromLTWH(size.x - 110, size.y - 30, player.health.toDouble(), 20),
+      Paint()..color = Colors.blueAccent,
+    );
+
     super.render(canvas);
 
+    // Draw joystick
     if (_pointerStartPosition != null) {
       canvas.drawCircle(
         _pointerStartPosition!,
@@ -144,25 +181,25 @@ class SpaceBattlesGame extends FlameGame
 
       // Upddate direction
       if (delta.distance <= _deadZoneRadius) {
-        _player.setMoveDirection(Vector2.zero());
+        player.setMoveDirection(Vector2.zero());
       } else {
-        _player.setMoveDirection(Vector2(delta.dx, delta.dy));
+        player.setMoveDirection(Vector2(delta.dx, delta.dy));
       }
 
       // Update speed
       if (delta.distance <= _deadZoneRadius) {
-        _player.setMoveSpeed(0);
+        player.setMoveSpeed(0);
       } else if (delta.distance > _deadZoneRadius &&
           delta.distance <= _movementSpeed1MaxRadius) {
-        _player.setMoveSpeed(_movementSpeed1);
+        player.setMoveSpeed(_movementSpeed1);
       } else if (delta.distance > _movementSpeed1MaxRadius &&
           delta.distance <= _movementSpeed2MaxRadius) {
-        _player.setMoveSpeed(_movementSpeed2);
+        player.setMoveSpeed(_movementSpeed2);
       } else if (delta.distance > _movementSpeed2MaxRadius &&
           delta.distance <= _movementSpeed3MaxRadius) {
-        _player.setMoveSpeed(_movementSpeed3);
+        player.setMoveSpeed(_movementSpeed3);
       } else if (delta.distance > _movementSpeed3MaxRadius) {
-        _player.setMoveSpeed(_movementSpeed4);
+        player.setMoveSpeed(_movementSpeed4);
       }
     }
   }
@@ -172,8 +209,8 @@ class SpaceBattlesGame extends FlameGame
   void onPanEnd(DragEndInfo info) {
     _pointerStartPosition = null;
     _pointerCurrentPosition = null;
-    _player.setMoveDirection(Vector2.zero());
-    _player.setMoveSpeed(0);
+    player.setMoveDirection(Vector2.zero());
+    player.setMoveSpeed(0);
   }
 
   // Shoot
@@ -184,7 +221,7 @@ class SpaceBattlesGame extends FlameGame
       PlayerBullet playerBullet = PlayerBullet(
         sprite: _spriteSheet.getSpriteById(28),
         size: Vector2(64, 64),
-        position: _player.position,
+        position: player.position,
       );
       playerBullet.anchor = Anchor.center;
       add(playerBullet);
@@ -217,15 +254,15 @@ class SpaceBattlesGame extends FlameGame
       speed = _movementSpeed4;
     }
 
-    _enemy.setMoveDirection(Vector2(dx, dy));
-    _enemy.setMoveSpeed(speed);
+    enemy.setMoveDirection(Vector2(dx, dy));
+    enemy.setMoveSpeed(speed);
 
-    if (_enemy.entranceComplete) {
+    if (enemy.entranceComplete) {
       if (shoot) {
         EnemyBullet enemyBullet = EnemyBullet(
           sprite: _spriteSheet.getSpriteById(28),
           size: Vector2(64, 64),
-          position: _enemy.position,
+          position: enemy.position,
         );
         enemyBullet.setMaxPosition(canvasSize[1]);
         enemyBullet.anchor = Anchor.center;
@@ -238,15 +275,15 @@ class SpaceBattlesGame extends FlameGame
     _enemySpriteID = Random().nextInt(24);
     _enemySpawnPositionNegative = Random().nextBool();
     if (!_playerDestroyed && _enemyDestroyed) {
-      _enemy = Enemy(
+      enemy = Enemy(
           sprite: _spriteSheet.getSpriteById(_enemySpriteID),
           size: Vector2(64, 64),
           position: _enemySpawnPositionNegative
               ? Vector2(canvasSize[0] / 2, 100) + Vector2.random() * -200
               : Vector2(canvasSize[0] / 2, 100) + Vector2.random() * 200);
-      _enemy.setMaxPosition(canvasSize);
-      _enemy.anchor = Anchor.topCenter;
-      add(_enemy);
+      enemy.setMaxPosition(canvasSize);
+      enemy.anchor = Anchor.topCenter;
+      add(enemy);
       _enemyDestroyed = false;
       _enemyActionTimer.start();
       _gameOverTimer.stop();

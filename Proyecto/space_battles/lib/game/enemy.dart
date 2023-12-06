@@ -13,6 +13,8 @@ class Enemy extends SpriteComponent
   Vector2 _finalSize = Vector2.zero();
   double _speed = 0;
   bool entranceComplete = false;
+  int health = 100;
+  final int _damageTaken = 10;
 
   Enemy({
     Sprite? sprite,
@@ -44,25 +46,32 @@ class Enemy extends SpriteComponent
     super.onCollision(intersectionPoints, other);
 
     if (other is PlayerBullet && entranceComplete) {
-      removeFromParent();
-
-      final particleComponent = ParticleSystemComponent(
-        particle: Particle.generate(
-          count: 50,
-          lifespan: 5,
-          generator: (i) => AcceleratedParticle(
-            acceleration: getRandomVectorForExplosion(),
-            speed: getRandomVectorForExplosion(),
-            position: position.clone(),
-            child: CircleParticle(
-              radius: 2,
-              paint: Paint()..color = Colors.white,
+      if (health > _damageTaken) {
+        health = health - _damageTaken;
+      } else {
+        removeFromParent();
+        health = health - _damageTaken;
+        if (health < 0) {
+          health = 0;
+        }
+        final particleComponent = ParticleSystemComponent(
+          particle: Particle.generate(
+            count: 50,
+            lifespan: 5,
+            generator: (i) => AcceleratedParticle(
+              acceleration: getRandomVectorForExplosion(),
+              speed: getRandomVectorForExplosion(),
+              position: position.clone(),
+              child: CircleParticle(
+                radius: 2,
+                paint: Paint()..color = Colors.white,
+              ),
             ),
           ),
-        ),
-      );
-
-      gameRef.add(particleComponent);
+        );
+        gameRef.add(particleComponent);
+        gameRef.player.score += 10;
+      }
     }
   }
 
