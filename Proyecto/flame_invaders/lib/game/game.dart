@@ -1,14 +1,21 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/sprite.dart';
+import 'package:flame_invaders/game/enemy.dart';
+import 'package:flame_invaders/game/enemy_bullet.dart';
 import 'package:flame_invaders/game/player.dart';
+import 'package:flame_invaders/game/player_bullet.dart';
 import 'package:flutter/material.dart';
 
-class FlameInvadersGame extends FlameGame with PanDetector {
-  late Player player;
+class FlameInvadersGame extends FlameGame with PanDetector, TapDetector {
+  late SpriteSheet _spriteSheet;
+  late Player _player;
+  late Enemy _enemy;
+  late Timer _enemyActionTimer;
   Offset? _pointerStartPosition;
   Offset? _pointerCurrentPosition;
   final double _joyStickRadius = 60;
@@ -21,28 +28,67 @@ class FlameInvadersGame extends FlameGame with PanDetector {
   final double _movementSpeed2 = 100;
   final double _movementSpeed3 = 200;
   final double _movementSpeed4 = 300;
+  final int _enemySpriteID = Random().nextInt(24);
 
   @override
   FutureOr<void> onLoad() async {
     await images.load('simpleSpace_tilesheet@2.png');
 
-    final spriteSheet = SpriteSheet.fromColumnsAndRows(
+    _spriteSheet = SpriteSheet.fromColumnsAndRows(
       image: images.fromCache('simpleSpace_tilesheet@2.png'),
       columns: 8,
       rows: 6,
     );
 
-    player = Player(
-      sprite: spriteSheet.getSpriteById(17),
+    _player = Player(
+      sprite: _spriteSheet.getSpriteById(17),
       size: Vector2(64, 64),
       position: Vector2(canvasSize[0] / 2, canvasSize[1] - 100),
     );
+    _player.setMaxPosition(canvasSize);
+    _player.anchor = Anchor.bottomCenter;
+    add(_player);
 
-    player.anchor = Anchor.bottomCenter;
+    _enemy = Enemy(
+      sprite: _spriteSheet.getSpriteById(_enemySpriteID),
+      size: Vector2(64, 64),
+      position: Vector2(canvasSize[0] / 2, 100),
+    );
+    _enemy.setMaxPosition(canvasSize);
+    _enemy.anchor = Anchor.topCenter;
+    add(_enemy);
 
-    add(player);
+    _enemyActionTimer = Timer(0.5, onTick: _enemyAction, repeat: true);
+    _enemyActionTimer.start();
   }
 
+  // Update game state
+  @override
+  void update(double dt) {
+    super.update(dt);
+    _enemyActionTimer.update(dt);
+
+    final playerBullets = children.whereType<PlayerBullet>();
+    final enemyBullets = children.whereType<EnemyBullet>();
+
+    for (final playerBullet in playerBullets) {
+      if (_enemy.containsPoint(playerBullet.absoluteCenter)) {
+        _enemy.removeFromParent();
+        _enemyActionTimer.stop();
+      }
+    }
+
+    for (final enemyBullet in enemyBullets) {
+      if (_player.containsPoint(enemyBullet.absoluteCenter)) {
+        _player.removeFromParent();
+        _enemy.setMoveDirection(Vector2.zero());
+        _enemy.setMoveSpeed(0);
+        _enemyActionTimer.stop();
+      }
+    }
+  }
+
+  // Draw joystick
   @override
   void render(Canvas canvas) {
     super.render(canvas);
@@ -74,12 +120,14 @@ class FlameInvadersGame extends FlameGame with PanDetector {
     }
   }
 
+  // Create joystick when touching screen
   @override
   void onPanStart(DragStartInfo info) {
     _pointerStartPosition = info.raw.globalPosition;
     _pointerCurrentPosition = info.raw.globalPosition;
   }
 
+  // Interact with the joystick
   @override
   void onPanUpdate(DragUpdateInfo info) {
     _pointerCurrentPosition = info.raw.globalPosition;
@@ -87,41 +135,89 @@ class FlameInvadersGame extends FlameGame with PanDetector {
 
     // Upddate direction
     if (delta.distance <= _deadZoneRadius) {
-      player.setMoveDirection(Vector2.zero());
+      _player.setMoveDirection(Vector2.zero());
     } else {
-      player.setMoveDirection(Vector2(delta.dx, delta.dy));
+      _player.setMoveDirection(Vector2(delta.dx, delta.dy));
     }
 
     // Update speed
     if (delta.distance <= _deadZoneRadius) {
-      player.setMoveSpeed(0);
+      _player.setMoveSpeed(0);
     } else if (delta.distance > _deadZoneRadius &&
         delta.distance <= _movementSpeed1MaxRadius) {
-      player.setMoveSpeed(_movementSpeed1);
+      _player.setMoveSpeed(_movementSpeed1);
     } else if (delta.distance > _movementSpeed1MaxRadius &&
         delta.distance <= _movementSpeed2MaxRadius) {
-      player.setMoveSpeed(_movementSpeed2);
+      _player.setMoveSpeed(_movementSpeed2);
     } else if (delta.distance > _movementSpeed2MaxRadius &&
         delta.distance <= _movementSpeed3MaxRadius) {
-      player.setMoveSpeed(_movementSpeed3);
+      _player.setMoveSpeed(_movementSpeed3);
     } else if (delta.distance > _movementSpeed3MaxRadius) {
-      player.setMoveSpeed(_movementSpeed4);
+      _player.setMoveSpeed(_movementSpeed4);
     }
   }
 
+  // Release the joystick
   @override
   void onPanEnd(DragEndInfo info) {
     _pointerStartPosition = null;
     _pointerCurrentPosition = null;
-    player.setMoveDirection(Vector2.zero());
-    player.setMoveSpeed(0);
+    _player.setMoveDirection(Vector2.zero());
+    _player.setMoveSpeed(0);
   }
 
+  // Shoot
   @override
-  void onPanCancel() {
-    _pointerStartPosition = null;
-    _pointerCurrentPosition = null;
-    player.setMoveDirection(Vector2.zero());
-    player.setMoveSpeed(0);
+  void onTapDown(TapDownInfo info) {
+    super.onTapDown(info);
+
+    PlayerBullet playerBullet = PlayerBullet(
+      sprite: _spriteSheet.getSpriteById(28),
+      size: Vector2(64, 64),
+      position: _player.position,
+    );
+    playerBullet.anchor = Anchor.center;
+    add(playerBullet);
+  }
+
+  // Enemy
+  void _enemyAction() {
+    int negativedx = Random().nextInt(2);
+    int negativedy = Random().nextInt(2);
+    int shoot = Random().nextInt(2);
+    double dx = Random().nextInt(60).toDouble();
+    double dy = Random().nextInt(60).toDouble();
+    double speed = Random().nextInt(5).toDouble();
+
+    if (negativedx == 1) {
+      dx = dx * -1;
+    }
+    if (negativedy == 1) {
+      dy = dy * -1;
+    }
+
+    if (speed == 1) {
+      speed = _movementSpeed1;
+    } else if (speed == 2) {
+      speed = _movementSpeed2;
+    } else if (speed == 3) {
+      speed = _movementSpeed3;
+    } else if (speed == 4) {
+      speed = _movementSpeed4;
+    }
+
+    _enemy.setMoveDirection(Vector2(dx, dy));
+    _enemy.setMoveSpeed(speed);
+
+    if (shoot == 1) {
+      EnemyBullet enemyBullet = EnemyBullet(
+        sprite: _spriteSheet.getSpriteById(28),
+        size: Vector2(64, 64),
+        position: _enemy.position,
+      );
+      enemyBullet.setMaxPosition(canvasSize[1]);
+      enemyBullet.anchor = Anchor.center;
+      add(enemyBullet);
+    }
   }
 }
