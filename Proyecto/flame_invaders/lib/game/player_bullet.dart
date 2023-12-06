@@ -1,6 +1,8 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_invaders/game/enemy.dart';
 
-class PlayerBullet extends SpriteComponent {
+class PlayerBullet extends SpriteComponent with CollisionCallbacks {
   final double _speed = 450;
 
   PlayerBullet({
@@ -8,6 +10,23 @@ class PlayerBullet extends SpriteComponent {
     Vector2? position,
     Vector2? size,
   }) : super(sprite: sprite, position: position, size: size);
+
+  @override
+  void onMount() {
+    super.onMount();
+
+    final shape = CircleHitbox();
+    add(shape);
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
+
+    if (other is Enemy) {
+      removeFromParent();
+    }
+  }
 
   @override
   void update(double dt) {

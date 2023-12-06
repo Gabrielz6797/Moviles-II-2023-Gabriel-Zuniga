@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -11,11 +12,13 @@ import 'package:flame_invaders/game/player.dart';
 import 'package:flame_invaders/game/player_bullet.dart';
 import 'package:flutter/material.dart';
 
-class FlameInvadersGame extends FlameGame with PanDetector, TapDetector {
+class FlameInvadersGame extends FlameGame
+    with PanDetector, TapDetector, HasCollisionDetection {
   late SpriteSheet _spriteSheet;
   late Player _player;
   late Enemy _enemy;
   late Timer _enemyActionTimer;
+  late Timer _gameOverTimer;
   Offset? _pointerStartPosition;
   Offset? _pointerCurrentPosition;
   final double _joyStickRadius = 60;
@@ -29,6 +32,8 @@ class FlameInvadersGame extends FlameGame with PanDetector, TapDetector {
   final double _movementSpeed3 = 200;
   final double _movementSpeed4 = 300;
   final int _enemySpriteID = Random().nextInt(24);
+  bool _playerDestroyed = false;
+  bool _enemyDestroyed = false;
 
   @override
   FutureOr<void> onLoad() async {
@@ -60,6 +65,8 @@ class FlameInvadersGame extends FlameGame with PanDetector, TapDetector {
 
     _enemyActionTimer = Timer(0.5, onTick: _enemyAction, repeat: true);
     _enemyActionTimer.start();
+
+    _gameOverTimer = Timer(1, onTick: _showGameOverMessage);
   }
 
   // Update game state
@@ -67,24 +74,22 @@ class FlameInvadersGame extends FlameGame with PanDetector, TapDetector {
   void update(double dt) {
     super.update(dt);
     _enemyActionTimer.update(dt);
+    _gameOverTimer.update(dt);
 
-    final playerBullets = children.whereType<PlayerBullet>();
-    final enemyBullets = children.whereType<EnemyBullet>();
-
-    for (final playerBullet in playerBullets) {
-      if (_enemy.containsPoint(playerBullet.absoluteCenter)) {
-        _enemy.removeFromParent();
-        _enemyActionTimer.stop();
-      }
+    if (_player.isRemoved && _playerDestroyed == false) {
+      _enemy.setMoveDirection(Vector2.zero());
+      _enemy.setMoveSpeed(0);
+      _enemyActionTimer.stop();
+      _playerDestroyed = true;
+      _gameOverTimer.start();
     }
 
-    for (final enemyBullet in enemyBullets) {
-      if (_player.containsPoint(enemyBullet.absoluteCenter)) {
-        _player.removeFromParent();
-        _enemy.setMoveDirection(Vector2.zero());
-        _enemy.setMoveSpeed(0);
-        _enemyActionTimer.stop();
-      }
+    if (_enemy.isRemoved && _enemyDestroyed == false) {
+      _enemy.setMoveDirection(Vector2.zero());
+      _enemy.setMoveSpeed(0);
+      _enemyActionTimer.stop();
+      _enemyDestroyed = true;
+      _gameOverTimer.start();
     }
   }
 
@@ -123,37 +128,41 @@ class FlameInvadersGame extends FlameGame with PanDetector, TapDetector {
   // Create joystick when touching screen
   @override
   void onPanStart(DragStartInfo info) {
-    _pointerStartPosition = info.raw.globalPosition;
-    _pointerCurrentPosition = info.raw.globalPosition;
+    if (!_playerDestroyed) {
+      _pointerStartPosition = info.raw.globalPosition;
+      _pointerCurrentPosition = info.raw.globalPosition;
+    }
   }
 
   // Interact with the joystick
   @override
   void onPanUpdate(DragUpdateInfo info) {
-    _pointerCurrentPosition = info.raw.globalPosition;
-    var delta = _pointerCurrentPosition! - _pointerStartPosition!;
+    if (!_playerDestroyed) {
+      _pointerCurrentPosition = info.raw.globalPosition;
+      var delta = _pointerCurrentPosition! - _pointerStartPosition!;
 
-    // Upddate direction
-    if (delta.distance <= _deadZoneRadius) {
-      _player.setMoveDirection(Vector2.zero());
-    } else {
-      _player.setMoveDirection(Vector2(delta.dx, delta.dy));
-    }
+      // Upddate direction
+      if (delta.distance <= _deadZoneRadius) {
+        _player.setMoveDirection(Vector2.zero());
+      } else {
+        _player.setMoveDirection(Vector2(delta.dx, delta.dy));
+      }
 
-    // Update speed
-    if (delta.distance <= _deadZoneRadius) {
-      _player.setMoveSpeed(0);
-    } else if (delta.distance > _deadZoneRadius &&
-        delta.distance <= _movementSpeed1MaxRadius) {
-      _player.setMoveSpeed(_movementSpeed1);
-    } else if (delta.distance > _movementSpeed1MaxRadius &&
-        delta.distance <= _movementSpeed2MaxRadius) {
-      _player.setMoveSpeed(_movementSpeed2);
-    } else if (delta.distance > _movementSpeed2MaxRadius &&
-        delta.distance <= _movementSpeed3MaxRadius) {
-      _player.setMoveSpeed(_movementSpeed3);
-    } else if (delta.distance > _movementSpeed3MaxRadius) {
-      _player.setMoveSpeed(_movementSpeed4);
+      // Update speed
+      if (delta.distance <= _deadZoneRadius) {
+        _player.setMoveSpeed(0);
+      } else if (delta.distance > _deadZoneRadius &&
+          delta.distance <= _movementSpeed1MaxRadius) {
+        _player.setMoveSpeed(_movementSpeed1);
+      } else if (delta.distance > _movementSpeed1MaxRadius &&
+          delta.distance <= _movementSpeed2MaxRadius) {
+        _player.setMoveSpeed(_movementSpeed2);
+      } else if (delta.distance > _movementSpeed2MaxRadius &&
+          delta.distance <= _movementSpeed3MaxRadius) {
+        _player.setMoveSpeed(_movementSpeed3);
+      } else if (delta.distance > _movementSpeed3MaxRadius) {
+        _player.setMoveSpeed(_movementSpeed4);
+      }
     }
   }
 
@@ -170,14 +179,15 @@ class FlameInvadersGame extends FlameGame with PanDetector, TapDetector {
   @override
   void onTapDown(TapDownInfo info) {
     super.onTapDown(info);
-
-    PlayerBullet playerBullet = PlayerBullet(
-      sprite: _spriteSheet.getSpriteById(28),
-      size: Vector2(64, 64),
-      position: _player.position,
-    );
-    playerBullet.anchor = Anchor.center;
-    add(playerBullet);
+    if (!_playerDestroyed) {
+      PlayerBullet playerBullet = PlayerBullet(
+        sprite: _spriteSheet.getSpriteById(28),
+        size: Vector2(64, 64),
+        position: _player.position,
+      );
+      playerBullet.anchor = Anchor.center;
+      add(playerBullet);
+    }
   }
 
   // Enemy
@@ -218,6 +228,16 @@ class FlameInvadersGame extends FlameGame with PanDetector, TapDetector {
       enemyBullet.setMaxPosition(canvasSize[1]);
       enemyBullet.anchor = Anchor.center;
       add(enemyBullet);
+    }
+  }
+
+  void _showGameOverMessage() {
+    if (!_playerDestroyed && _enemyDestroyed) {
+      print("You won!");
+    } else if (_playerDestroyed && !_enemyDestroyed) {
+      print("You lost...");
+    } else if (_playerDestroyed && _enemyDestroyed) {
+      print("It's a tie!");
     }
   }
 }
