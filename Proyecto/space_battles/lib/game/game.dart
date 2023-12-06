@@ -20,6 +20,7 @@ class SpaceBattlesGame extends FlameGame
   late Timer _gameOverTimer;
   late TextComponent _playerScore;
   late TextComponent _playerHealth;
+  late TextComponent _enemyHealth;
   Offset? _pointerStartPosition;
   Offset? _pointerCurrentPosition;
   final double _joyStickRadius = 60;
@@ -96,6 +97,19 @@ class SpaceBattlesGame extends FlameGame
     );
     _playerHealth.anchor = Anchor.bottomRight;
     add(_playerHealth);
+
+    _enemyHealth = TextComponent(
+      text: 'Health: 100%',
+      position: Vector2(size.x / 2, 10),
+      textRenderer: TextPaint(
+        style: const TextStyle(
+          fontSize: 16,
+          color: Colors.white,
+        ),
+      ),
+    );
+    _enemyHealth.anchor = Anchor.topCenter;
+    add(_enemyHealth);
   }
 
   // Update game state
@@ -122,15 +136,22 @@ class SpaceBattlesGame extends FlameGame
     }
 
     _playerScore.text = 'Score: ${player.score}';
-    _playerHealth.text = 'Health:\t\t${player.health}%';
+    _playerHealth.text = 'Health: ${player.health}%';
+    _enemyHealth.text = 'Health: ${enemy.health}%';
   }
 
   @override
   void render(Canvas canvas) {
-    // Draw health bar
+    // Draw player health bar
     canvas.drawRect(
-      Rect.fromLTWH(size.x - 110, size.y - 30, player.health.toDouble(), 20),
+      Rect.fromLTWH(size.x - 108, size.y - 30, player.health.toDouble(), 20),
       Paint()..color = Colors.blueAccent,
+    );
+
+    // Draw enemy health bar
+    canvas.drawRect(
+      Rect.fromLTWH(size.x / 4, 10, enemy.health.toDouble() * 2, 20),
+      Paint()..color = Colors.redAccent,
     );
 
     super.render(canvas);
