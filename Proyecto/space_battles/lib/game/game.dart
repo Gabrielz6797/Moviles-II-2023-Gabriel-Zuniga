@@ -17,7 +17,7 @@ class SpaceBattlesGame extends FlameGame
   late Player player;
   late Enemy enemy;
   late Timer _enemyActionTimer;
-  late Timer _gameOverTimer;
+  late Timer _gameActionTimer;
   late TextComponent _playerScore;
   late TextComponent _playerHealth;
   late TextComponent _enemyHealth;
@@ -70,7 +70,7 @@ class SpaceBattlesGame extends FlameGame
     _enemyActionTimer = Timer(0.5, onTick: _enemyAction, repeat: true);
     _enemyActionTimer.start();
 
-    _gameOverTimer = Timer(1, onTick: _showGameOverMessage);
+    _gameActionTimer = Timer(1, onTick: _gameAction);
 
     _playerScore = TextComponent(
       text: 'Score: 0',
@@ -117,14 +117,14 @@ class SpaceBattlesGame extends FlameGame
   void update(double dt) {
     super.update(dt);
     _enemyActionTimer.update(dt);
-    _gameOverTimer.update(dt);
+    _gameActionTimer.update(dt);
 
     if (player.isRemoved && _playerDestroyed == false) {
       enemy.setMoveDirection(Vector2.zero());
       enemy.setMoveSpeed(0);
       _enemyActionTimer.stop();
       _playerDestroyed = true;
-      _gameOverTimer.start();
+      _gameActionTimer.start();
     }
 
     if (enemy.isRemoved && _enemyDestroyed == false) {
@@ -132,7 +132,7 @@ class SpaceBattlesGame extends FlameGame
       enemy.setMoveSpeed(0);
       _enemyActionTimer.stop();
       _enemyDestroyed = true;
-      _gameOverTimer.start();
+      _gameActionTimer.start();
     }
 
     _playerScore.text = 'Score: ${player.score}';
@@ -292,10 +292,10 @@ class SpaceBattlesGame extends FlameGame
     }
   }
 
-  void _showGameOverMessage() {
+  void _gameAction() {
     _enemySpriteID = Random().nextInt(24);
     _enemySpawnPositionNegative = Random().nextBool();
-    if (!_playerDestroyed && _enemyDestroyed) {
+    if (_enemyDestroyed) {
       enemy = Enemy(
           sprite: _spriteSheet.getSpriteById(_enemySpriteID),
           size: Vector2(64, 64),
@@ -307,11 +307,9 @@ class SpaceBattlesGame extends FlameGame
       add(enemy);
       _enemyDestroyed = false;
       _enemyActionTimer.start();
-      _gameOverTimer.stop();
-    } else if (_playerDestroyed && !_enemyDestroyed) {
-      print("You lost...");
-    } else if (_playerDestroyed && _enemyDestroyed) {
-      print("It's a tie!");
+      _gameActionTimer.stop();
+    } else if (_playerDestroyed) {
+      print("Game Over");
     }
   }
 }
