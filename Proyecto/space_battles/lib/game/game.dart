@@ -319,6 +319,7 @@ class SpaceBattlesGame extends FlameGame
     _enemySpawnPositionNegative = Random().nextBool();
     if (_enemyDestroyed) {
       level++;
+      _recoverPlayerHealth(level);
       enemy = Enemy(
           level: level,
           sprite: _spriteSheet.getSpriteById(_enemySpriteID),
@@ -334,6 +335,21 @@ class SpaceBattlesGame extends FlameGame
       _gameActionTimer.stop();
     } else if (_playerDestroyed) {
       overlays.add(GameOverMenu.id);
+    }
+  }
+
+  void _recoverPlayerHealth(int level) {
+    if (_every5Level(level)) {
+      player.health = 100;
+    }
+  }
+
+  bool _every5Level(int level) {
+    int currentLevel = level;
+    if ((currentLevel % 5) != 0) {
+      return false;
+    } else {
+      return true;
     }
   }
 }
