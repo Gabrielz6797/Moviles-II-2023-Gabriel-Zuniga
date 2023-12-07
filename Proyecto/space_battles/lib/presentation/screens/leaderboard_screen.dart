@@ -58,7 +58,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                       children: [
                         CustomTextBox(
                           fieldTitle: "${index + 1}: ${post['username']}",
-                          fieldData: post['score'].toString(),
+                          fieldData: "Score: ${post['score'].toString()}",
                           editable: false,
                         ),
                         const SizedBox(
