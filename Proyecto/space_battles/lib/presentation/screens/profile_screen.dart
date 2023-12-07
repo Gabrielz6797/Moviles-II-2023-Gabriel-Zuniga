@@ -27,7 +27,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'Edit $text',
             style: const TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 15,
+              fontSize: 20,
             ),
           ),
           content: TextField(
@@ -46,6 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
               child: const Text(
                 'Cancel',
+                style: TextStyle(fontSize: 16),
               ),
             ),
             FilledButton(
@@ -59,6 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
               child: const Text(
                 'Save',
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ],
@@ -72,6 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final authCubit = context.watch<AuthCubit>();
     final email = context.watch<AuthCubit>().state.email;
     final username = context.watch<AuthCubit>().state.username;
+    final score = context.watch<AuthCubit>().state.score;
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -105,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Text(
                       'About me',
-                      style: TextStyle(color: colors.secondary, fontSize: 20),
+                      style: TextStyle(color: colors.secondary, fontSize: 24),
                     ),
                     const SizedBox(
                       height: 15,
@@ -113,6 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     CustomTextBox(
                       fieldTitle: 'Username:',
                       fieldData: username,
+                      editable: true,
                       onEditPressed: () {
                         editFieldDialog(
                           'username',
@@ -121,6 +125,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           email,
                         );
                       },
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    CustomTextBox(
+                      fieldTitle: 'High score:',
+                      fieldData: score.toString(),
+                      editable: false,
                     ),
                     const SizedBox(
                       height: 25,

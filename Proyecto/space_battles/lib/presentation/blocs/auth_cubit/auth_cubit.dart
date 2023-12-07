@@ -33,6 +33,7 @@ class AuthCubit extends Cubit<AuthState> {
           isLoading: false,
           email: user.email,
           username: userData.data()!['username'],
+          score: userData.data()!['score'],
         ),
       );
     } on FirebaseAuthException catch (e) {
@@ -68,6 +69,7 @@ class AuthCubit extends Cubit<AuthState> {
           isCreatingAccount: false,
           email: user.email,
           username: userData.data()!['username'],
+          score: userData.data()!['score'],
         ),
       );
     } on FirebaseAuthException catch (e) {
@@ -94,6 +96,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(state.copyWith(
         isLoading: false,
         username: userData.data()!['username'],
+        score: userData.data()!['score'],
       ));
     } catch (e) {
       emit(

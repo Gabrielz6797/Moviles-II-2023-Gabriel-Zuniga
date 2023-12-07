@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class CustomTextBox extends StatelessWidget {
   final String fieldTitle;
   final String fieldData;
+  final bool editable;
   final void Function()? onEditPressed;
   const CustomTextBox({
     super.key,
     required this.fieldTitle,
     required this.fieldData,
-    required this.onEditPressed,
+    required this.editable,
+    this.onEditPressed,
   });
 
   @override
@@ -16,12 +18,7 @@ class CustomTextBox extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return Container(
-      padding: const EdgeInsets.only(
-        left: 15,
-        top: 2,
-        right: 15,
-        bottom: 15,
-      ),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: colors.secondaryContainer.withAlpha(50),
         borderRadius: BorderRadius.circular(15),
@@ -43,13 +40,17 @@ class CustomTextBox extends StatelessWidget {
               const Expanded(
                 child: SizedBox(),
               ),
-              IconButton(
-                onPressed: onEditPressed,
-                icon: const Icon(
-                  Icons.edit_rounded,
-                  size: 30,
-                ),
-              ),
+              editable
+                  ? GestureDetector(
+                      onTap: () {
+                        onEditPressed!();
+                      },
+                      child: const Icon(
+                        Icons.edit_rounded,
+                        size: 24,
+                      ),
+                    )
+                  : const Text(''),
             ],
           ),
           const Divider(

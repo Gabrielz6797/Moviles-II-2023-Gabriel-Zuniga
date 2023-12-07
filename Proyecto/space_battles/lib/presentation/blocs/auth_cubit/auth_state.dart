@@ -8,6 +8,7 @@ class AuthState extends Equatable {
   final String errorMessage;
   final String email;
   final String username;
+  final int score;
 
   const AuthState({
     this.isAuth = false,
@@ -17,6 +18,7 @@ class AuthState extends Equatable {
     this.errorMessage = '',
     this.email = '',
     this.username = '',
+    this.score = 0,
   });
 
   AuthState copyWith({
@@ -27,6 +29,7 @@ class AuthState extends Equatable {
     String? errorMessage,
     String? email,
     String? username,
+    int? score,
   }) =>
       AuthState(
         isAuth: isAuth ?? this.isAuth,
@@ -36,6 +39,7 @@ class AuthState extends Equatable {
         errorMessage: errorMessage ?? this.errorMessage,
         email: email ?? this.email,
         username: username ?? this.username,
+        score: score ?? this.score,
       );
 
   @override
@@ -47,5 +51,6 @@ class AuthState extends Equatable {
         errorMessage,
         email,
         username,
+        score,
       ];
 }

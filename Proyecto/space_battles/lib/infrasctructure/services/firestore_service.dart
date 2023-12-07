@@ -22,12 +22,15 @@ class FirestoreService {
   Future<void> createUserData(
       String collectionPath, String email, String username) async {
     await FirebaseFirestore.instance.collection(collectionPath).doc(email).set(
-      {'username': username},
+      {
+        'username': username,
+        'score': 0,
+      },
     );
   }
 
   Future<void> updateUserData(
-      String collectionPath, String email, String field, String data) async {
+      String collectionPath, String email, String field, dynamic data) async {
     await FirebaseFirestore.instance
         .collection(collectionPath)
         .doc(email)
