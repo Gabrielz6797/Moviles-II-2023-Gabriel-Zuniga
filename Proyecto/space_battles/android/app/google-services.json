@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "953462429627",
+    "project_id": "space-battles-game",
+    "storage_bucket": "space-battles-game.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:953462429627:android:92e3b652bb2e005b22d69e",
+        "android_client_info": {
+          "package_name": "com.example.space_battles"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuyrlhP_EeQN0BrW8BtuujiR7vO6mzg94"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
