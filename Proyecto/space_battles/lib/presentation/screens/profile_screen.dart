@@ -42,7 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                context.pop();
+                context.go('/main-menu');
               },
               child: const Text(
                 'Cancel',

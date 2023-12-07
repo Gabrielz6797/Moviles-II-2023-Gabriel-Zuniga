@@ -18,6 +18,8 @@ void main() async {
 
   PlayerData.initialize();
 
+  PlayerData.audioPlayerComponent.playSFX('laser1.ogg');
+
   runApp(
     MultiBlocProvider(
       providers: [

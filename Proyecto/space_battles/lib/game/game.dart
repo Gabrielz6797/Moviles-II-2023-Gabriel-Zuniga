@@ -5,6 +5,7 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/sprite.dart';
+import 'package:space_battles/game/audio_player_component.dart';
 import 'package:space_battles/game/enemy.dart';
 import 'package:space_battles/game/enemy_bullet.dart';
 import 'package:space_battles/game/player.dart';
@@ -17,6 +18,7 @@ class SpaceBattlesGame extends FlameGame
   late SpriteSheet _spriteSheet;
   late Player player;
   late Enemy enemy;
+  late AudioPlayerComponent audioPlayerComponent;
   late Timer _enemyActionTimer;
   late Timer _gameActionTimer;
   late TextComponent _playerScore;
@@ -42,7 +44,9 @@ class SpaceBattlesGame extends FlameGame
   bool _playerDestroyed = false;
   bool _enemyDestroyed = false;
 
-  SpaceBattlesGame({int? shipID}) : super() {
+  SpaceBattlesGame({AudioPlayerComponent? audioPlayerComponent, int? shipID})
+      : super() {
+    this.audioPlayerComponent = audioPlayerComponent!;
     _playerSpriteID = shipID!;
   }
 
@@ -55,6 +59,8 @@ class SpaceBattlesGame extends FlameGame
       columns: 8,
       rows: 6,
     );
+
+    add(audioPlayerComponent);
 
     player = Player(
       sprite: _spriteSheet.getSpriteById(_playerSpriteID),
@@ -93,9 +99,22 @@ class SpaceBattlesGame extends FlameGame
     _playerScore.anchor = Anchor.bottomLeft;
     add(_playerScore);
 
-    _playerHealth = TextComponent(
-      text: 'Health: 100%',
+    _level = TextComponent(
+      text: 'Level: 1',
       position: Vector2(size.x - 10, size.y - 10),
+      textRenderer: TextPaint(
+        style: const TextStyle(
+          fontSize: 16,
+          color: Colors.white60,
+        ),
+      ),
+    );
+    _level.anchor = Anchor.bottomRight;
+    add(_level);
+
+    _playerHealth = TextComponent(
+      text: 'Health: 100',
+      position: Vector2(size.x / 2, size.y - 10),
       textRenderer: TextPaint(
         style: const TextStyle(
           fontSize: 16,
@@ -103,11 +122,11 @@ class SpaceBattlesGame extends FlameGame
         ),
       ),
     );
-    _playerHealth.anchor = Anchor.bottomRight;
+    _playerHealth.anchor = Anchor.bottomCenter;
     add(_playerHealth);
 
     _enemyHealth = TextComponent(
-      text: 'Health: 100%',
+      text: 'Health: 100',
       position: Vector2(size.x / 2, 10),
       textRenderer: TextPaint(
         style: const TextStyle(
@@ -118,19 +137,6 @@ class SpaceBattlesGame extends FlameGame
     );
     _enemyHealth.anchor = Anchor.topCenter;
     add(_enemyHealth);
-
-    _level = TextComponent(
-      text: 'Level: 1',
-      position: Vector2(10, size.y - 30),
-      textRenderer: TextPaint(
-        style: const TextStyle(
-          fontSize: 16,
-          color: Colors.white60,
-        ),
-      ),
-    );
-    _level.anchor = Anchor.bottomLeft;
-    add(_level);
   }
 
   // Update game state
@@ -166,13 +172,23 @@ class SpaceBattlesGame extends FlameGame
   void render(Canvas canvas) {
     // Draw player health bar
     canvas.drawRect(
-      Rect.fromLTWH(size.x - 108, size.y - 30, player.health.toDouble(), 20),
+      Rect.fromLTWH(
+        size.x / 3,
+        size.y - 30,
+        player.health.toDouble() * 1.33,
+        20,
+      ),
       Paint()..color = Colors.blueAccent,
     );
 
     // Draw enemy health bar
     canvas.drawRect(
-      Rect.fromLTWH(size.x / 4, 10, enemy.healthBar* 2, 20),
+      Rect.fromLTWH(
+        size.x / 4,
+        10,
+        enemy.healthBar * 2,
+        20,
+      ),
       Paint()..color = Colors.redAccent,
     );
 
@@ -268,6 +284,7 @@ class SpaceBattlesGame extends FlameGame
       );
       playerBullet.anchor = Anchor.center;
       add(playerBullet);
+      audioPlayerComponent.playSFX('laserSmall_001.ogg');
     }
   }
 
@@ -310,6 +327,7 @@ class SpaceBattlesGame extends FlameGame
         enemyBullet.setMaxPosition(canvasSize[1]);
         enemyBullet.anchor = Anchor.center;
         add(enemyBullet);
+        audioPlayerComponent.playSFX('laserSmall_000.ogg');
       }
     }
   }
@@ -317,7 +335,7 @@ class SpaceBattlesGame extends FlameGame
   void _gameAction() {
     _enemySpriteID = Random().nextInt(24);
     _enemySpawnPositionNegative = Random().nextBool();
-    if (_enemyDestroyed) {
+    if (_enemyDestroyed && !_playerDestroyed) {
       level++;
       _recoverPlayerHealth(level);
       enemy = Enemy(

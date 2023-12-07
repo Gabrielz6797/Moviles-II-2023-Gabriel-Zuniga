@@ -18,7 +18,9 @@ class _PlayGameState extends State<PlayGame> {
       body: WillPopScope(
         onWillPop: () async => false,
         child: GameWidget(
-          game: SpaceBattlesGame(shipID: PlayerData.spaceship.spriteID),
+          game: SpaceBattlesGame(
+              audioPlayerComponent: PlayerData.audioPlayerComponent,
+              shipID: PlayerData.spaceship.spriteID),
           initialActiveOverlays: const [PauseButton.id],
           overlayBuilderMap: {
             PauseButton.id: (BuildContext context, SpaceBattlesGame gameRef) =>

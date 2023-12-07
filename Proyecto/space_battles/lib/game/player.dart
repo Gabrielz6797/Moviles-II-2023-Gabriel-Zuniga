@@ -45,6 +45,7 @@ class Player extends SpriteComponent
         health = health - _damageTaken;
       } else {
         removeFromParent();
+        gameRef.audioPlayerComponent.playSFX('laser1.ogg');
         health = health - _damageTaken;
         if (health < 0) {
           health = 0;

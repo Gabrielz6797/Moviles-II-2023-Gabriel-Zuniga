@@ -48,7 +48,7 @@ class OptionsScreen extends StatelessWidget {
               height: MediaQuery.of(context).size.height / 16,
               child: ElevatedButton(
                 onPressed: () {
-                  context.go('/music-selection');
+                  context.go('/bgm-selection');
                 },
                 child: const Text(
                   'Music',

@@ -96,6 +96,21 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
+      path: '/bgm-selection',
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+          key: state.pageKey,
+          child: const BGMSelection(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        );
+      },
+    ),
+    GoRoute(
       path: '/profile',
       pageBuilder: (context, state) {
         return CustomTransitionPage(
