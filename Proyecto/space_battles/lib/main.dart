@@ -1,13 +1,32 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:space_battles/config/router/app_router.dart';
 import 'package:space_battles/config/theme/app_theme.dart';
+import 'package:space_battles/firebase_options.dart';
+import 'package:space_battles/presentation/blocs.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Flame.device.fullScreen();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
-    const MainApp(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AuthCubit(),
+        ),
+        BlocProvider(
+          create: (context) => ScoresCubit(),
+        ),
+      ],
+      child: const MainApp(),
+    ),
   );
 }
 

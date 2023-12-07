@@ -2,8 +2,8 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:space_battles/game/game.dart';
 import 'package:space_battles/models/player_data.dart';
-import 'package:space_battles/widgets/overlays/pause_button.dart';
-import 'package:space_battles/widgets/overlays/pause_menu.dart';
+import 'package:space_battles/presentation/widgets/overlays/pause_button.dart';
+import 'package:space_battles/presentation/widgets/overlays/pause_menu.dart';
 
 class GamePlay extends StatefulWidget {
   const GamePlay({super.key});

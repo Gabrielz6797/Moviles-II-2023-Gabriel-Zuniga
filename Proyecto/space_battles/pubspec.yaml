@@ -8,12 +8,14 @@ environment:
 
 dependencies:
   cloud_firestore: ^4.13.3
+  equatable: ^2.0.5
   firebase_auth: ^4.15.0
   firebase_core: ^2.24.0
   flame: ^1.11.0
   flame_audio: ^2.1.4
   flutter:
     sdk: flutter
+  flutter_bloc: ^8.1.3
   go_router: ^12.1.1
 
 dev_dependencies:

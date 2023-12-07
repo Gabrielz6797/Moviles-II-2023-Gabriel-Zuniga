@@ -1,0 +1,201 @@
+import 'package:space_battles/presentation/blocs.dart';
+import 'package:space_battles/presentation/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  void editFieldDialog(
+    String text,
+    AuthCubit authCubit,
+    String field,
+    String email,
+  ) {
+    String newValue = '';
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            'Edit $text',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
+          content: TextField(
+            autofocus: true,
+            decoration: InputDecoration(
+              hintText: 'Edit your $text',
+            ),
+            onChanged: (value) {
+              newValue = value;
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                context.pop();
+              },
+              child: const Text(
+                'Cancel',
+              ),
+            ),
+            FilledButton(
+              onPressed: () {
+                authCubit.updateUserData(
+                  email,
+                  field,
+                  newValue,
+                );
+                context.pop();
+              },
+              child: const Text(
+                'Save',
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final authCubit = context.watch<AuthCubit>();
+    final email = context.watch<AuthCubit>().state.email;
+    final username = context.watch<AuthCubit>().state.username;
+    final colors = Theme.of(context).colorScheme;
+
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+          ),
+          child: email != ''
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Profile',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 60,
+                        fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(blurRadius: 40, color: colors.primary),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      email,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: colors.secondary, fontSize: 24),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      'About me',
+                      style: TextStyle(color: colors.secondary, fontSize: 20),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    CustomTextBox(
+                      fieldTitle: 'Username:',
+                      fieldData: username,
+                      onEditPressed: () {
+                        editFieldDialog(
+                          'username',
+                          authCubit,
+                          'username',
+                          email,
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 2,
+                      height: MediaQuery.of(context).size.height / 16,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.go('/main-menu');
+                        },
+                        child: const Text(
+                          'Home',
+                          style: TextStyle(fontSize: 24),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                  ],
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 50),
+                      child: Text(
+                        'Not logged in',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(blurRadius: 40, color: colors.primary),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 2,
+                      height: MediaQuery.of(context).size.height / 16,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.go('/login');
+                        },
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(fontSize: 24),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 2,
+                      height: MediaQuery.of(context).size.height / 16,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.go('/main-menu');
+                        },
+                        child: const Text(
+                          'Home',
+                          style: TextStyle(fontSize: 24),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+}
