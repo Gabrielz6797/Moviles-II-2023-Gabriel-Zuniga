@@ -22,6 +22,7 @@ class SpaceBattlesGame extends FlameGame
   late TextComponent _playerScore;
   late TextComponent _playerHealth;
   late TextComponent _enemyHealth;
+  late TextComponent _level;
   Offset? _pointerStartPosition;
   Offset? _pointerCurrentPosition;
   final double _joyStickRadius = 60;
@@ -34,6 +35,7 @@ class SpaceBattlesGame extends FlameGame
   final double _movementSpeed2 = 100;
   final double _movementSpeed3 = 200;
   final double _movementSpeed4 = 300;
+  int level = 1;
   int _playerSpriteID = 0;
   int _enemySpriteID = Random().nextInt(24);
   bool _enemySpawnPositionNegative = Random().nextBool();
@@ -116,6 +118,19 @@ class SpaceBattlesGame extends FlameGame
     );
     _enemyHealth.anchor = Anchor.topCenter;
     add(_enemyHealth);
+
+    _level = TextComponent(
+      text: 'Level: 1',
+      position: Vector2(10, size.y - 30),
+      textRenderer: TextPaint(
+        style: const TextStyle(
+          fontSize: 16,
+          color: Colors.white60,
+        ),
+      ),
+    );
+    _level.anchor = Anchor.bottomLeft;
+    add(_level);
   }
 
   // Update game state
@@ -142,8 +157,9 @@ class SpaceBattlesGame extends FlameGame
     }
 
     _playerScore.text = 'Score: ${player.score}';
-    _playerHealth.text = 'Health: ${player.health}%';
-    _enemyHealth.text = 'Health: ${enemy.health}%';
+    _playerHealth.text = 'Health: ${player.health}';
+    _enemyHealth.text = 'Health: ${enemy.health}';
+    _level.text = 'Level: $level';
   }
 
   @override
@@ -156,7 +172,7 @@ class SpaceBattlesGame extends FlameGame
 
     // Draw enemy health bar
     canvas.drawRect(
-      Rect.fromLTWH(size.x / 4, 10, enemy.health.toDouble() * 2, 20),
+      Rect.fromLTWH(size.x / 4, 10, enemy.healthBar* 2, 20),
       Paint()..color = Colors.redAccent,
     );
 
@@ -302,7 +318,9 @@ class SpaceBattlesGame extends FlameGame
     _enemySpriteID = Random().nextInt(24);
     _enemySpawnPositionNegative = Random().nextBool();
     if (_enemyDestroyed) {
+      level++;
       enemy = Enemy(
+          level: level,
           sprite: _spriteSheet.getSpriteById(_enemySpriteID),
           size: Vector2(64, 64),
           position: _enemySpawnPositionNegative

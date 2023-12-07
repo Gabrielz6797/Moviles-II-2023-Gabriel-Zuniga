@@ -13,16 +13,28 @@ class Enemy extends SpriteComponent
   Vector2 _finalSize = Vector2.zero();
   double _speed = 0;
   bool entranceComplete = false;
-  int health = 100;
+  int health = 100; /// current health
+  double healthBar = 100; /// health percentage shown as a bar
+  /// enemy's total health at the beginning, can change depending on the level
+  int totalHealth = 100;
+  int healthBase = 100;
   final int _damageTaken = 10;
 
   Enemy({
     Sprite? sprite,
     Vector2? position,
     Vector2? size,
+    int? level
   }) : super(sprite: sprite, position: position, size: Vector2(0, 0)) {
     angle = pi;
     _finalSize = size!;
+    if (level != null) {
+      health = healthBase+(level * 50);
+      totalHealth = health;
+    } else {
+      health = 100;
+    }
+    
   }
 
   Vector2 getRandomVectorForThruster() {
@@ -48,6 +60,7 @@ class Enemy extends SpriteComponent
     if (other is PlayerBullet && entranceComplete) {
       if (health > _damageTaken) {
         health = health - _damageTaken;
+        healthBar = (health/totalHealth) * 100;
       } else {
         removeFromParent();
         health = health - _damageTaken;
