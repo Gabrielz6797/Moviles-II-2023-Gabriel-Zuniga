@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:flame/parallax.dart';
 import 'package:flame/sprite.dart';
 import 'package:space_battles/game/audio_player_component.dart';
 import 'package:space_battles/game/enemy.dart';
@@ -61,6 +62,17 @@ class SpaceBattlesGame extends FlameGame
     );
 
     add(audioPlayerComponent);
+
+    ParallaxComponent _stars = await ParallaxComponent.load(
+      [
+        ParallaxImageData('stars1.png'),
+        ParallaxImageData('stars2.png'),
+      ],
+      repeat: ImageRepeat.repeat,
+      baseVelocity: Vector2(0, -50),
+      velocityMultiplierDelta: Vector2(0, 1.5),
+    );
+    add(_stars);
 
     player = Player(
       sprite: _spriteSheet.getSpriteById(_playerSpriteID),
@@ -276,7 +288,7 @@ class SpaceBattlesGame extends FlameGame
   @override
   void onTapDown(TapDownInfo info) {
     super.onTapDown(info);
-    if (!_playerDestroyed) {
+    if (!_playerDestroyed && overlays.isActive(PauseButton.id)) {
       PlayerBullet playerBullet = PlayerBullet(
         sprite: _spriteSheet.getSpriteById(28),
         size: Vector2(64, 64),
