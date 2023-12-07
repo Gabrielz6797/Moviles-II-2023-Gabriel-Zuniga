@@ -1,9 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:space_battles/game/game.dart';
-import 'package:space_battles/models/player_data.dart';
-import 'package:space_battles/presentation/widgets/overlays/pause_button.dart';
-import 'package:space_battles/presentation/widgets/overlays/pause_menu.dart';
+import 'package:space_battles/presentation/widgets.dart';
 
 class GamePlay extends StatefulWidget {
   const GamePlay({super.key});
@@ -13,8 +11,6 @@ class GamePlay extends StatefulWidget {
 }
 
 class _GamePlayState extends State<GamePlay> {
-  PlayerData playerData = PlayerData();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,6 +26,10 @@ class _GamePlayState extends State<GamePlay> {
                 ),
             PauseMenu.id: (BuildContext context, SpaceBattlesGame gameRef) =>
                 PauseMenu(
+                  gameRef: gameRef,
+                ),
+            GameOverMenu.id: (BuildContext context, SpaceBattlesGame gameRef) =>
+                GameOverMenu(
                   gameRef: gameRef,
                 ),
           },

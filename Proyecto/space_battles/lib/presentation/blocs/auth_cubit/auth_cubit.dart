@@ -84,7 +84,7 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> updateUserData(String email, String field, String data) async {
+  Future<void> updateUserData(String email, String field, dynamic data) async {
     emit(state.copyWith(
       isLoading: true,
     ));

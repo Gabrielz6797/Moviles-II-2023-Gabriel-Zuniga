@@ -10,6 +10,7 @@ import 'package:space_battles/game/enemy_bullet.dart';
 import 'package:space_battles/game/player.dart';
 import 'package:space_battles/game/player_bullet.dart';
 import 'package:flutter/material.dart';
+import 'package:space_battles/presentation/widgets.dart';
 
 class SpaceBattlesGame extends FlameGame
     with PanDetector, TapDetector, HasCollisionDetection {
@@ -314,7 +315,7 @@ class SpaceBattlesGame extends FlameGame
       _enemyActionTimer.start();
       _gameActionTimer.stop();
     } else if (_playerDestroyed) {
-      print("Game Over");
+      overlays.add(GameOverMenu.id);
     }
   }
 }

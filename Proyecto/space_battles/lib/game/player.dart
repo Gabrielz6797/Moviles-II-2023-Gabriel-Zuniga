@@ -11,7 +11,7 @@ class Player extends SpriteComponent
   Vector2 _moveDirection = Vector2.zero();
   double _speed = 0;
   int score = 0;
-  int health = 100;
+  int health = 5;
   final int _damageTaken = 5;
 
   Player({

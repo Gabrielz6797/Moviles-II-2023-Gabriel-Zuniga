@@ -7,10 +7,10 @@ part 'scores_state.dart';
 class ScoresCubit extends Cubit<ScoresState> {
   ScoresCubit() : super(const ScoresState());
 
-  void getScores(String collectionPath) {
+  void getScores() {
     emit(state.copyWith(isLoading: true, scores: []));
     List<Map<String, dynamic>> scores = [];
-    FirestoreService().getScores(collectionPath).then((value) {
+    FirestoreService().getScores('scores').then((value) {
       for (var element in value.docs) {
         Map<String, dynamic> documentData = element.data();
         documentData['id'] = element.id;
@@ -21,8 +21,8 @@ class ScoresCubit extends Cubit<ScoresState> {
     });
   }
 
-  Future<void> addScores(String collectionPath, String email, int score) async {
-    await FirestoreService().addScore(collectionPath, email, score);
-    getScores(collectionPath);
+  Future<void> addScore(String email, int score) async {
+    await FirestoreService().addScore('scores', email, score);
+    getScores();
   }
 }
