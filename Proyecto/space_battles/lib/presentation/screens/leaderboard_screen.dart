@@ -50,24 +50,36 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 height: 15,
               ),
               Expanded(
-                child: ListView.builder(
-                  itemCount: scores.length,
-                  itemBuilder: (context, index) {
-                    final post = scores[index];
-                    return Column(
-                      children: [
-                        CustomTextBox(
-                          fieldTitle: "#${index + 1}: ${post['username']}",
-                          fieldData: "Score: ${post['score'].toString()}",
-                          editable: false,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                child: (scores.isNotEmpty)
+                  ? ListView.builder(
+                    itemCount: scores.length,
+                    itemBuilder: (context, index) {
+                      final post = scores[index];
+                      return Column(
+                        children: [
+                          CustomTextBox(
+                            fieldTitle: "#${index + 1}: ${post['username']}",
+                            fieldData: "Score: ${post['score'].toString()}",
+                            editable: false,
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                        ],
+                      );
+                    },
+                  )
+                  : Container(
+                    alignment: Alignment.center,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.2,
+                      height: MediaQuery.of(context).size.height / 16,
+                      child: const Text(
+                        'No hay puntuaciones por mostrar.',
+                        style: TextStyle(fontSize: 19),
+                      ),
+                    ),
+                  ),
               ),
               const SizedBox(
                 height: 25,
