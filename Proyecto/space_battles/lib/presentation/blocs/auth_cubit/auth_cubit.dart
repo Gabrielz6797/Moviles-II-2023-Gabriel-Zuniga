@@ -19,12 +19,12 @@ class AuthCubit extends Cubit<AuthState> {
       );
       final user = FirebaseAuth.instance.currentUser!;
       DocumentSnapshot<Map<String, dynamic>> userData =
-          await FirestoreService().getUserData('users', user.email!);
+          await FirestoreService().getUserData(user.email!);
 
       if (!userData.exists) {
         await FirestoreService()
-            .createUserData('users', user.email!, user.email!.split('@')[0]);
-        userData = await FirestoreService().getUserData('users', user.email!);
+            .createUserData(user.email!, user.email!.split('@')[0]);
+        userData = await FirestoreService().getUserData(user.email!);
       }
 
       emit(
@@ -57,10 +57,9 @@ class AuthCubit extends Cubit<AuthState> {
         email: email,
         password: password,
       );
-      await FirestoreService()
-          .createUserData('users', email, email.split('@')[0]);
+      await FirestoreService().createUserData(email, email.split('@')[0]);
       final user = FirebaseAuth.instance.currentUser!;
-      final userData = await FirestoreService().getUserData('users', email);
+      final userData = await FirestoreService().getUserData(email);
 
       emit(
         state.copyWith(
@@ -90,8 +89,8 @@ class AuthCubit extends Cubit<AuthState> {
     ));
 
     try {
-      await FirestoreService().updateUserData('users', email, field, data);
-      final userData = await FirestoreService().getUserData('users', email);
+      await FirestoreService().updateUserData(email, field, data);
+      final userData = await FirestoreService().getUserData(email);
 
       emit(state.copyWith(
         isLoading: false,

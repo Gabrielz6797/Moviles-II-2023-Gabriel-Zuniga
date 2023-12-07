@@ -55,7 +55,7 @@ class CustomTextBox extends StatelessWidget {
           ),
           const Divider(
             height: 10,
-            thickness: 1,
+            thickness: 0.2,
             indent: 0,
             endIndent: 0,
             color: Colors.white,

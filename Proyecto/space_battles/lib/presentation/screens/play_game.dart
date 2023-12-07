@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:space_battles/game/game.dart';
 import 'package:space_battles/presentation/widgets.dart';
 
-class GamePlay extends StatefulWidget {
-  const GamePlay({super.key});
+class PlayGame extends StatefulWidget {
+  const PlayGame({super.key});
 
   @override
-  State<GamePlay> createState() => _GamePlayState();
+  State<PlayGame> createState() => _PlayGameState();
 }
 
-class _GamePlayState extends State<GamePlay> {
+class _PlayGameState extends State<PlayGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -10,7 +10,7 @@ class ScoresCubit extends Cubit<ScoresState> {
   void getScores() {
     emit(state.copyWith(isLoading: true, scores: []));
     List<Map<String, dynamic>> scores = [];
-    FirestoreService().getScores('scores').then((value) {
+    FirestoreService().getScores().then((value) {
       for (var element in value.docs) {
         Map<String, dynamic> documentData = element.data();
         documentData['id'] = element.id;
@@ -21,8 +21,8 @@ class ScoresCubit extends Cubit<ScoresState> {
     });
   }
 
-  Future<void> addScore(String email, int score) async {
-    await FirestoreService().addScore('scores', email, score);
+  Future<void> addScore(String username, int score) async {
+    await FirestoreService().addScore(username, score);
     getScores();
   }
 }

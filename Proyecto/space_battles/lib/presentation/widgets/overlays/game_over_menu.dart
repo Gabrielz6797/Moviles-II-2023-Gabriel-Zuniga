@@ -14,7 +14,7 @@ class GameOverMenu extends StatelessWidget {
     int playerHighScore = authCubit.state.score;
     if (authCubit.state.email != '') {
       scoresCubit.addScore(
-        authCubit.state.email,
+        authCubit.state.username,
         gameRef.player.score,
       );
 
@@ -56,7 +56,7 @@ class GameOverMenu extends StatelessWidget {
                   ]),
                 ),
           SizedBox(
-            width: MediaQuery.of(context).size.width / 2,
+            width: MediaQuery.of(context).size.width / 1.6,
             height: MediaQuery.of(context).size.height / 16,
             child: authCubit.state.email != ''
                 ? ElevatedButton(
@@ -65,7 +65,7 @@ class GameOverMenu extends StatelessWidget {
                     },
                     child: const Text(
                       'Save & exit',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 24),
                     ),
                   )
                 : const Text(
@@ -82,12 +82,12 @@ class GameOverMenu extends StatelessWidget {
                   height: 15,
                 ),
           SizedBox(
-            width: MediaQuery.of(context).size.width / 2,
+            width: MediaQuery.of(context).size.width / 1.6,
             height: MediaQuery.of(context).size.height / 16,
             child: ElevatedButton(
               onPressed: () {
                 context.pop();
-                context.push('/game-play');
+                context.push('/play-game');
               },
               child: const Text(
                 'Restart',
@@ -99,7 +99,7 @@ class GameOverMenu extends StatelessWidget {
             height: 25,
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width / 2,
+            width: MediaQuery.of(context).size.width / 1.6,
             height: MediaQuery.of(context).size.height / 16,
             child: ElevatedButton(
               onPressed: () {

@@ -36,11 +36,26 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: '/game-play',
+      path: '/play-game',
       pageBuilder: (context, state) {
         return CustomTransitionPage(
           key: state.pageKey,
-          child: const GamePlay(),
+          child: const PlayGame(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        );
+      },
+    ),
+    GoRoute(
+      path: '/leaderboard',
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+          key: state.pageKey,
+          child: const LeaderboardScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(
               opacity: animation,
@@ -55,7 +70,7 @@ final appRouter = GoRouter(
       pageBuilder: (context, state) {
         return CustomTransitionPage(
           key: state.pageKey,
-          child: const MainMenu(),
+          child: const OptionsScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(
               opacity: animation,
@@ -81,11 +96,11 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: '/register',
+      path: '/login',
       pageBuilder: (context, state) {
         return CustomTransitionPage(
           key: state.pageKey,
-          child: RegisterScreen(),
+          child: LoginScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(
               opacity: animation,
@@ -96,11 +111,11 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: '/login',
+      path: '/register',
       pageBuilder: (context, state) {
         return CustomTransitionPage(
           key: state.pageKey,
-          child: LoginScreen(),
+          child: RegisterScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(
               opacity: animation,

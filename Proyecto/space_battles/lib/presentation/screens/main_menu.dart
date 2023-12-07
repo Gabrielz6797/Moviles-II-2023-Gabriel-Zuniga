@@ -32,11 +32,11 @@ class MainMenu extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width / 2,
+              width: MediaQuery.of(context).size.width / 1.6,
               height: MediaQuery.of(context).size.height / 16,
               child: ElevatedButton(
                 onPressed: () {
-                  context.push('/game-play');
+                  context.push('/play-game');
                 },
                 child: const Text(
                   'Play',
@@ -48,10 +48,28 @@ class MainMenu extends StatelessWidget {
               height: 25,
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width / 2,
+              width: MediaQuery.of(context).size.width / 1.6,
               height: MediaQuery.of(context).size.height / 16,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.go('/leaderboard');
+                },
+                child: const Text(
+                  'Leaderboard',
+                  style: TextStyle(fontSize: 24),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 1.6,
+              height: MediaQuery.of(context).size.height / 16,
+              child: ElevatedButton(
+                onPressed: () {
+                  context.go('/options');
+                },
                 child: const Text(
                   'Options',
                   style: TextStyle(fontSize: 24),
@@ -62,7 +80,7 @@ class MainMenu extends StatelessWidget {
               height: 25,
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width / 2,
+              width: MediaQuery.of(context).size.width / 1.6,
               height: MediaQuery.of(context).size.height / 16,
               child: ElevatedButton(
                 onPressed: () {
@@ -78,7 +96,7 @@ class MainMenu extends StatelessWidget {
               height: 25,
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width / 2,
+              width: MediaQuery.of(context).size.width / 1.6,
               height: MediaQuery.of(context).size.height / 16,
               child: email == ''
                   ? ElevatedButton(

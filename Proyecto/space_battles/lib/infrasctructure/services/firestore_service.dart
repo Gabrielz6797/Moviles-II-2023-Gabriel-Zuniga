@@ -1,27 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreService {
-  Future<QuerySnapshot<Map<String, dynamic>>> getScores(
-      String collectionPath) async {
+  Future<QuerySnapshot<Map<String, dynamic>>> getScores() async {
     return FirebaseFirestore.instance
-        .collection(collectionPath)
-        .orderBy('timestamp', descending: true)
+        .collection('scores')
+        .limit(10)
+        .orderBy('score', descending: true)
         .get();
   }
 
-  Future<void> addScore(String collectionPath, String email, int score) async {
-    await FirebaseFirestore.instance.collection(collectionPath).add(
+  Future<void> addScore(String username, int score) async {
+    await FirebaseFirestore.instance.collection('scores').add(
       {
-        'email': email,
+        'username': username,
         'score': score,
         'timestamp': Timestamp.now(),
       },
     );
   }
 
-  Future<void> createUserData(
-      String collectionPath, String email, String username) async {
-    await FirebaseFirestore.instance.collection(collectionPath).doc(email).set(
+  Future<void> createUserData(String email, String username) async {
+    await FirebaseFirestore.instance.collection('users').doc(email).set(
       {
         'username': username,
         'score': 0,
@@ -29,22 +28,15 @@ class FirestoreService {
     );
   }
 
-  Future<void> updateUserData(
-      String collectionPath, String email, String field, dynamic data) async {
-    await FirebaseFirestore.instance
-        .collection(collectionPath)
-        .doc(email)
-        .update(
+  Future<void> updateUserData(String email, String field, dynamic data) async {
+    await FirebaseFirestore.instance.collection('users').doc(email).update(
       {field: data},
     );
   }
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserData(
-      String collectionPath, String email) async {
-    return FirebaseFirestore.instance
-        .collection(collectionPath)
-        .doc(email)
-        .get();
+      String email) async {
+    return FirebaseFirestore.instance.collection('users').doc(email).get();
   }
 
   Future<void> clear() async {

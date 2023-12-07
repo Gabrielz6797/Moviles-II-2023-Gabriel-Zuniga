@@ -138,7 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 25,
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width / 2,
+                      width: MediaQuery.of(context).size.width / 1.6,
                       height: MediaQuery.of(context).size.height / 16,
                       child: ElevatedButton(
                         onPressed: () {
@@ -173,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width / 2,
+                      width: MediaQuery.of(context).size.width / 1.6,
                       height: MediaQuery.of(context).size.height / 16,
                       child: ElevatedButton(
                         onPressed: () {
@@ -189,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 25,
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width / 2,
+                      width: MediaQuery.of(context).size.width / 1.6,
                       height: MediaQuery.of(context).size.height / 16,
                       child: ElevatedButton(
                         onPressed: () {

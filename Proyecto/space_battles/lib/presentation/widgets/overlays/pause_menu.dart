@@ -27,7 +27,7 @@ class PauseMenu extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width / 2,
+            width: MediaQuery.of(context).size.width / 1.6,
             height: MediaQuery.of(context).size.height / 16,
             child: ElevatedButton(
               onPressed: () {
@@ -45,12 +45,12 @@ class PauseMenu extends StatelessWidget {
             height: 25,
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width / 2,
+            width: MediaQuery.of(context).size.width / 1.6,
             height: MediaQuery.of(context).size.height / 16,
             child: ElevatedButton(
               onPressed: () {
                 context.pop();
-                context.push('/game-play');
+                context.push('/play-game');
               },
               child: const Text(
                 'Restart',
@@ -62,7 +62,7 @@ class PauseMenu extends StatelessWidget {
             height: 25,
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width / 2,
+            width: MediaQuery.of(context).size.width / 1.6,
             height: MediaQuery.of(context).size.height / 16,
             child: ElevatedButton(
               onPressed: () {
