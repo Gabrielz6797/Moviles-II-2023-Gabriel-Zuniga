@@ -22,7 +22,7 @@ class _SpaceshipSelectionState extends State<SpaceshipSelection> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Select',
+              'Select spaceship',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 60,
