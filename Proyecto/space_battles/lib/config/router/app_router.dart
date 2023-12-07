@@ -81,6 +81,21 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
+      path: '/spaceship-selection',
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+          key: state.pageKey,
+          child: const SpaceshipSelection(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        );
+      },
+    ),
+    GoRoute(
       path: '/profile',
       pageBuilder: (context, state) {
         return CustomTransitionPage(

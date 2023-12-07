@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:space_battles/config/router/app_router.dart';
 import 'package:space_battles/config/theme/app_theme.dart';
 import 'package:space_battles/firebase_options.dart';
+import 'package:space_battles/models/player_data.dart';
 import 'package:space_battles/presentation/blocs.dart';
 
 void main() async {
@@ -14,6 +15,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  PlayerData.initialize();
 
   runApp(
     MultiBlocProvider(

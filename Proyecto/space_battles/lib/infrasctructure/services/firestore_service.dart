@@ -4,8 +4,8 @@ class FirestoreService {
   Future<QuerySnapshot<Map<String, dynamic>>> getScores() async {
     return FirebaseFirestore.instance
         .collection('scores')
-        .limit(10)
         .orderBy('score', descending: true)
+        .limit(10)
         .get();
   }
 
