@@ -315,6 +315,7 @@ class SpaceBattlesGame extends FlameGame
       _enemyActionTimer.start();
       _gameActionTimer.stop();
     } else if (_playerDestroyed) {
+      overlays.remove(PauseButton.id);
       overlays.add(GameOverMenu.id);
     }
   }
