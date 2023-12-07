@@ -22,7 +22,7 @@ class _BGMSelectionState extends State<BGMSelection> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Select',
+              'Select BGM',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 60,
