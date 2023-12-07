@@ -32,6 +32,38 @@ class OptionsScreen extends StatelessWidget {
               height: MediaQuery.of(context).size.height / 16,
               child: ElevatedButton(
                 onPressed: () {
+                  context.go('/spaceship-selection');
+                },
+                child: const Text(
+                  'Spaceship',
+                  style: TextStyle(fontSize: 24),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 1.6,
+              height: MediaQuery.of(context).size.height / 16,
+              child: ElevatedButton(
+                onPressed: () {
+                  context.go('/music-selection');
+                },
+                child: const Text(
+                  'Music',
+                  style: TextStyle(fontSize: 24),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 1.6,
+              height: MediaQuery.of(context).size.height / 16,
+              child: ElevatedButton(
+                onPressed: () {
                   context.go('/main-menu');
                 },
                 child: const Text(

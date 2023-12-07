@@ -5,4 +5,5 @@ export './screens/main_menu.dart';
 export './screens/options_screen.dart';
 export './screens/profile_screen.dart';
 export './screens/register_screen.dart';
+export './screens/spaceship_selection.dart';
 export './screens/splash_screen.dart';

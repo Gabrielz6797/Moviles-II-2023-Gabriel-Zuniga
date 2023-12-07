@@ -57,7 +57,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                     return Column(
                       children: [
                         CustomTextBox(
-                          fieldTitle: "${index + 1}: ${post['username']}",
+                          fieldTitle: "#${index + 1}: ${post['username']}",
                           fieldData: "Score: ${post['score'].toString()}",
                           editable: false,
                         ),
