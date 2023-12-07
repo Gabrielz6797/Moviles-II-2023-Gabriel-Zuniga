@@ -36,85 +36,87 @@ class GameOverMenu extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          authCubit.state.email != ''
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 50),
-                  child: Text(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            authCubit.state.email != ''
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 50),
+                    child: Text(
+                      'GAME OVER',
+                      style: TextStyle(fontSize: 40, shadows: [
+                        Shadow(blurRadius: 40, color: colors.primary),
+                      ]),
+                    ),
+                  )
+                : Text(
                     'GAME OVER',
                     style: TextStyle(fontSize: 40, shadows: [
                       Shadow(blurRadius: 40, color: colors.primary),
                     ]),
                   ),
-                )
-              : Text(
-                  'GAME OVER',
-                  style: TextStyle(fontSize: 40, shadows: [
-                    Shadow(blurRadius: 40, color: colors.primary),
-                  ]),
-                ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 1.6,
-            height: MediaQuery.of(context).size.height / 16,
-            child: authCubit.state.email != ''
-                ? ElevatedButton(
-                    onPressed: () {
-                      saveScore(context, authCubit, scoresCubit);
-                    },
-                    child: const Text(
-                      'Save & exit',
-                      style: TextStyle(fontSize: 24),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 1.6,
+              height: MediaQuery.of(context).size.height / 16,
+              child: authCubit.state.email != ''
+                  ? ElevatedButton(
+                      onPressed: () {
+                        saveScore(context, authCubit, scoresCubit);
+                      },
+                      child: const Text(
+                        'Save & exit',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    )
+                  : const Text(
+                      'Login to save your score!',
+                      style: TextStyle(fontSize: 16),
+                      textAlign: TextAlign.center,
                     ),
+            ),
+            authCubit.state.email != ''
+                ? const SizedBox(
+                    height: 25,
                   )
-                : const Text(
-                    'Login to save your score!',
-                    style: TextStyle(fontSize: 16),
-                    textAlign: TextAlign.center,
+                : const SizedBox(
+                    height: 15,
                   ),
-          ),
-          authCubit.state.email != ''
-              ? const SizedBox(
-                  height: 25,
-                )
-              : const SizedBox(
-                  height: 15,
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 1.6,
+              height: MediaQuery.of(context).size.height / 16,
+              child: ElevatedButton(
+                onPressed: () {
+                  context.pop();
+                  context.push('/play-game');
+                },
+                child: const Text(
+                  'Restart',
+                  style: TextStyle(fontSize: 24),
                 ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 1.6,
-            height: MediaQuery.of(context).size.height / 16,
-            child: ElevatedButton(
-              onPressed: () {
-                context.pop();
-                context.push('/play-game');
-              },
-              child: const Text(
-                'Restart',
-                style: TextStyle(fontSize: 24),
               ),
             ),
-          ),
-          const SizedBox(
-            height: 25,
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 1.6,
-            height: MediaQuery.of(context).size.height / 16,
-            child: ElevatedButton(
-              onPressed: () {
-                context.pop();
-              },
-              child: const Text(
-                'Exit',
-                style: TextStyle(fontSize: 24),
+            const SizedBox(
+              height: 25,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 1.6,
+              height: MediaQuery.of(context).size.height / 16,
+              child: ElevatedButton(
+                onPressed: () {
+                  context.pop();
+                },
+                child: const Text(
+                  'Exit',
+                  style: TextStyle(fontSize: 24),
+                ),
               ),
             ),
-          ),
-          const SizedBox(
-            height: 25,
-          ),
-        ],
+            const SizedBox(
+              height: 25,
+            ),
+          ],
+        ),
       ),
     );
   }

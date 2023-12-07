@@ -58,100 +58,105 @@ class RegisterScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(
             horizontal: 20,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 25),
-                child: Text(
-                  'Register',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 60,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(blurRadius: 40, color: colors.primary),
-                    ],
-                  ),
-                ),
-              ),
-              CustomTextField(
-                hintText: 'Email',
-                controller: _emailController,
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              CustomTextField(
-                hintText: 'Password',
-                controller: _passwordController,
-                obscureText: true,
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              CustomTextField(
-                hintText: 'Confirm password',
-                controller: _confirmPasswordController,
-                obscureText: true,
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 1.6,
-                height: MediaQuery.of(context).size.height / 16,
-                child: ElevatedButton(
-                  onPressed: () {
-                    signUp(context, authCubit);
-                  },
-                  child: const Text(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 25),
+                  child: Text(
                     'Register',
-                    style: TextStyle(fontSize: 24),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 60,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(blurRadius: 40, color: colors.primary),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 1.6,
-                height: MediaQuery.of(context).size.height / 16,
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.go('/main-menu');
-                  },
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(fontSize: 24),
+                CustomTextField(
+                  hintText: 'Email',
+                  controller: _emailController,
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                CustomTextField(
+                  hintText: 'Password',
+                  controller: _passwordController,
+                  obscureText: true,
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                CustomTextField(
+                  hintText: 'Confirm password',
+                  controller: _confirmPasswordController,
+                  obscureText: true,
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 1.6,
+                  height: MediaQuery.of(context).size.height / 16,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      signUp(context, authCubit);
+                    },
+                    child: const Text(
+                      'Register',
+                      style: TextStyle(fontSize: 24),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Text(
-                "Already have an account?",
-                style: TextStyle(
-                  color: colors.secondary,
-                  fontSize: 20,
+                const SizedBox(
+                  height: 25,
                 ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  authCubit.isCreatingAccount();
-                  context.go('/login');
-                },
-                child: Text(
-                  'Login!',
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 1.6,
+                  height: MediaQuery.of(context).size.height / 16,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      context.go('/main-menu');
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  "Already have an account?",
                   style: TextStyle(
-                    color: colors.primary,
-                    fontWeight: FontWeight.bold,
+                    color: colors.secondary,
                     fontSize: 20,
                   ),
                 ),
-              ),
-            ],
+                GestureDetector(
+                  onTap: () {
+                    authCubit.isCreatingAccount();
+                    context.go('/login');
+                  },
+                  child: Text(
+                    'Login!',
+                    style: TextStyle(
+                      color: colors.primary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+              ],
+            ),
           ),
         ),
       ),
