@@ -13,7 +13,7 @@ class GamePlay extends StatelessWidget {
       body: WillPopScope(
         onWillPop: () async => false,
         child: GameWidget(
-          game: SpaceBattlesGame(),
+          game: SpaceBattlesGame(shipID: 14),
           initialActiveOverlays: const [PauseButton.id],
           overlayBuilderMap: {
             PauseButton.id: (BuildContext context, SpaceBattlesGame gameRef) =>

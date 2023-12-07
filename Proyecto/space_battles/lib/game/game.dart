@@ -33,10 +33,15 @@ class SpaceBattlesGame extends FlameGame
   final double _movementSpeed2 = 100;
   final double _movementSpeed3 = 200;
   final double _movementSpeed4 = 300;
+  int _playerSpriteID = 0;
   int _enemySpriteID = Random().nextInt(24);
   bool _enemySpawnPositionNegative = Random().nextBool();
   bool _playerDestroyed = false;
   bool _enemyDestroyed = false;
+
+  SpaceBattlesGame({int? shipID}) : super() {
+    _playerSpriteID = shipID!;
+  }
 
   @override
   FutureOr<void> onLoad() async {
@@ -49,7 +54,7 @@ class SpaceBattlesGame extends FlameGame
     );
 
     player = Player(
-      sprite: _spriteSheet.getSpriteById(17),
+      sprite: _spriteSheet.getSpriteById(_playerSpriteID),
       size: Vector2(64, 64),
       position: Vector2(canvasSize[0] / 2, canvasSize[1] - 100),
     );
