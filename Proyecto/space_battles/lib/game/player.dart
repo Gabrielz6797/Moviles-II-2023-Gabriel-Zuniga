@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:space_battles/game/enemy_bullet.dart';
 import 'package:space_battles/game/game.dart';
 
+/// [Player] Creates and handles a that represents the player
 class Player extends SpriteComponent
     with CollisionCallbacks, HasGameRef<SpaceBattlesGame> {
   Vector2 _maxPosition = Vector2.zero();
   Vector2 _moveDirection = Vector2.zero();
   double _speed = 0;
   int score = 0;
-  int health = 5;
+  int health = 100;
   final int _damageTaken = 5;
 
   Player({

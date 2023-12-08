@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+/// [LeaderboardScreen] Allows the user to see the leaderboard
 class LeaderboardScreen extends StatefulWidget {
   const LeaderboardScreen({super.key});
 

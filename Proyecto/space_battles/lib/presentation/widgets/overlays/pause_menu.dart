@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:space_battles/game/game.dart';
 import 'package:space_battles/presentation/widgets.dart';
 
+/// [PauseMenu] Shows a pause screen when pressing the pause button
 class PauseMenu extends StatelessWidget {
   static const String id = 'PauseMenu';
   final SpaceBattlesGame gameRef;

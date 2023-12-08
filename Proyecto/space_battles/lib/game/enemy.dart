@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:space_battles/game/game.dart';
 import 'package:space_battles/game/player_bullet.dart';
 
+/// [Enemy] Creates and handles sprites that represent enemies
 class Enemy extends SpriteComponent
     with CollisionCallbacks, HasGameRef<SpaceBattlesGame> {
   Vector2 _maxPosition = Vector2.zero();
@@ -13,9 +14,14 @@ class Enemy extends SpriteComponent
   Vector2 _finalSize = Vector2.zero();
   double _speed = 0;
   bool entranceComplete = false;
-  int health = 100; // current health
-  double healthBar = 100; // health percentage shown as a bar
-  // enemy's total health at the beginning, can change depending on the level
+
+  /// current health
+  int health = 100;
+
+  /// health percentage shown as a bar
+  double healthBar = 100;
+
+  /// enemy's total health at the beginning, can change depending on the level
   int totalHealth = 100;
   int healthBase = 100;
   final int _damageTaken = 10;

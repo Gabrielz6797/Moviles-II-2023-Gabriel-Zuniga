@@ -3,6 +3,7 @@ import 'package:flame/components.dart';
 import 'package:space_battles/game/enemy.dart';
 import 'package:space_battles/game/game.dart';
 
+/// [PlayerBullet] Creates and handles sprites that represent player bullets
 class PlayerBullet extends SpriteComponent
     with CollisionCallbacks, HasGameRef<SpaceBattlesGame> {
   final double _speed = 450;

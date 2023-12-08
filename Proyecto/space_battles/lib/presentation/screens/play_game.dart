@@ -4,6 +4,7 @@ import 'package:space_battles/game/game.dart';
 import 'package:space_battles/models/player_data.dart';
 import 'package:space_battles/presentation/widgets.dart';
 
+/// [PlayGame] Loads an instance of the game
 class PlayGame extends StatefulWidget {
   const PlayGame({super.key});
 

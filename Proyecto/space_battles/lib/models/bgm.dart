@@ -1,3 +1,4 @@
+/// [BGM] Class that contains info about the BGMs
 class BGM {
   int bgmID;
   String name;

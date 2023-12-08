@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:space_battles/models/bgm.dart';
 import 'package:space_battles/models/player_data.dart';
 
+/// [BGMSelection] Allows the user to choose the BGM
 class BGMSelection extends StatefulWidget {
   const BGMSelection({super.key});
 

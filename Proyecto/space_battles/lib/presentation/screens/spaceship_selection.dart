@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:space_battles/models/player_data.dart';
 import 'package:space_battles/models/spaceship.dart';
 
+/// [SpaceshipSelection] Allows the player to choose a spaceship
 class SpaceshipSelection extends StatefulWidget {
   const SpaceshipSelection({super.key});
 

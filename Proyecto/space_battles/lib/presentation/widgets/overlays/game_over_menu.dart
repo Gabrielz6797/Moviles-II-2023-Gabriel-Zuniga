@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:space_battles/game/game.dart';
 import 'package:space_battles/presentation/blocs.dart';
 
+/// [GameOverMenu] Shows a gameover screen when the player dies
 class GameOverMenu extends StatelessWidget {
   static const String id = 'GameOverMenu';
   final SpaceBattlesGame gameRef;

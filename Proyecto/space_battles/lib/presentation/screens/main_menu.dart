@@ -1,11 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:space_battles/models/player_data.dart';
 import 'package:space_battles/presentation/blocs.dart';
 
+/// [MainMenu] Allows the user to interact with other screens
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key});
 

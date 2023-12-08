@@ -1,9 +1,10 @@
 import 'dart:async';
-
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:space_battles/models/bgm.dart';
 
+/// [AudioPlayerComponent] Loads the sounds from the assets folder to use in
+/// game
 class AudioPlayerComponent extends Component {
   @override
   Future<void>? onLoad() async {

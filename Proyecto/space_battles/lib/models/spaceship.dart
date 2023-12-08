@@ -1,3 +1,4 @@
+/// [Spaceship] Class that contains info about the spaceships
 class Spaceship {
   int spriteID;
   String assetPath;

@@ -3,6 +3,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:space_battles/game/player.dart';
 
+/// [EnemyBullet] Creates and handles sprites that represent enemy bullets
 class EnemyBullet extends SpriteComponent with CollisionCallbacks {
   double _maxPosition = 0;
   final double _speed = 450;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:space_battles/models/player_data.dart';
 
+/// [SplashScreen] Plays an animation and sound when opening the app
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 

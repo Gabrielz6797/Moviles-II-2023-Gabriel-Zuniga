@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+/// [OptionsScreen] Allows the user to access options
 class OptionsScreen extends StatelessWidget {
   const OptionsScreen({super.key});
 

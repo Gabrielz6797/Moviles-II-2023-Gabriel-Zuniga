@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+/// [RegisterScreen] Allows the player to create an account
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key});
 

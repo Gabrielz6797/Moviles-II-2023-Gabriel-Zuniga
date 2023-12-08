@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+/// [ProfileScreen] Allows the player to see their profile
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:space_battles/game/game.dart';
 import 'package:space_battles/presentation/widgets.dart';
 
+/// [PauseButton] Shows a pause button in the game
 class PauseButton extends StatelessWidget {
   static const String id = 'PauseButton';
   final SpaceBattlesGame gameRef;

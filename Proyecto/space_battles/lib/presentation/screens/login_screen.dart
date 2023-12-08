@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+/// [LoginScreen] Allows the user to read their data from Firebase
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 

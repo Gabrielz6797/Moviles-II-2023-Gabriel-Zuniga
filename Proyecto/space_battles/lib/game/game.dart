@@ -14,6 +14,7 @@ import 'package:space_battles/game/player_bullet.dart';
 import 'package:flutter/material.dart';
 import 'package:space_battles/presentation/widgets.dart';
 
+/// [SpaceBattlesGame] Creates and handles a game instance
 class SpaceBattlesGame extends FlameGame
     with PanDetector, TapDetector, HasCollisionDetection {
   late SpriteSheet _spriteSheet;
