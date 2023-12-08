@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:space_battles/models/spaceship.dart';
 
 class CustomTextBox extends StatelessWidget {
   final String fieldTitle;
   final String fieldData;
   final bool editable;
+  final bool image;
   final void Function()? onEditPressed;
   const CustomTextBox({
     super.key,
     required this.fieldTitle,
     required this.fieldData,
     required this.editable,
+    required this.image,
     this.onEditPressed,
   });
 
@@ -25,7 +28,7 @@ class CustomTextBox extends StatelessWidget {
         border: Border.all(color: colors.secondaryContainer),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
             children: [
@@ -60,12 +63,18 @@ class CustomTextBox extends StatelessWidget {
             endIndent: 0,
             color: Colors.white,
           ),
-          Text(
-            fieldData,
-            style: const TextStyle(
-              fontSize: 20,
-            ),
-          ),
+          image
+              ? Image.asset(
+                  Spaceship.spaceships[int.parse(fieldData)].assetPath,
+                  width: 72,
+                  height: 72,
+                )
+              : Text(
+                  fieldData,
+                  style: const TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
         ],
       ),
     );

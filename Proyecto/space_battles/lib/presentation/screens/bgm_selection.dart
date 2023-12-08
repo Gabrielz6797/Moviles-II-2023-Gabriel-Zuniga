@@ -43,7 +43,9 @@ class _BGMSelectionState extends State<BGMSelection> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        bgm.name.substring(0, bgm.name.length - 4),
+                        bgm.name != 'No BGM'
+                            ? bgm.name.substring(0, bgm.name.length - 4)
+                            : bgm.name,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontSize: 30,
@@ -61,8 +63,10 @@ class _BGMSelectionState extends State<BGMSelection> {
                                   PlayerData.bgm.bgmID = index;
                                   PlayerData.bgm.name = BGM.bgms[index].name;
                                   PlayerData.audioPlayerComponent.stopBGM();
-                                  PlayerData.audioPlayerComponent
-                                      .playBGM(PlayerData.bgm.name);
+                                  if (PlayerData.bgm.name != 'No BGM') {
+                                    PlayerData.audioPlayerComponent
+                                        .playBGM(PlayerData.bgm.name);
+                                  }
                                   setState(() {});
                                 },
                                 child: const Text(

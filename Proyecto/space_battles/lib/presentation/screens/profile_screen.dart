@@ -120,6 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         fieldTitle: 'Username:',
                         fieldData: username,
                         editable: true,
+                        image: false,
                         onEditPressed: () {
                           editFieldDialog(
                             'username',
@@ -136,6 +137,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         fieldTitle: 'High score:',
                         fieldData: score.toString(),
                         editable: false,
+                        image: false,
                       ),
                       const SizedBox(
                         height: 25,

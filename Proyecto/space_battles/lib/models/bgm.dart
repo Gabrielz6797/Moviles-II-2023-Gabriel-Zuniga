@@ -8,6 +8,7 @@ class BGM {
   });
 
   static final bgms = <BGM>[
+    BGM(bgmID: 0, name: 'No BGM'),
     BGM(bgmID: 1, name: '1. Neon Road Trip.wav'),
     BGM(bgmID: 2, name: '2. Spaceman.wav'),
     BGM(bgmID: 3, name: '3. Psychedelia Flashback.wav'),
@@ -30,13 +31,13 @@ class BGM {
         name = map['name'];
 
   static Map<String, dynamic> defaultData = {
-    'bgmID': 0,
+    'bgmID': 1,
     'name': '1. Neon Road Trip.wav',
   };
 
   static List<String> getNames(List<BGM> bgms) {
     List<String> names = [];
-    for (int i = 0; i < bgms.length; i++) {
+    for (int i = 1; i < bgms.length; i++) {
       names.add(bgms[i].name);
     }
     return names;

@@ -62,6 +62,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                                     "#${index + 1}: ${post['username']}",
                                 fieldData: "Score: ${post['score'].toString()}",
                                 editable: false,
+                                image: false,
                               ),
                               const SizedBox(
                                 height: 15,

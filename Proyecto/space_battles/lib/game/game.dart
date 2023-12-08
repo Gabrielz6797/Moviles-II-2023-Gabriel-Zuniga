@@ -63,7 +63,7 @@ class SpaceBattlesGame extends FlameGame
 
     add(audioPlayerComponent);
 
-    ParallaxComponent _stars = await ParallaxComponent.load(
+    ParallaxComponent stars = await ParallaxComponent.load(
       [
         ParallaxImageData('stars1.png'),
         ParallaxImageData('stars2.png'),
@@ -72,7 +72,7 @@ class SpaceBattlesGame extends FlameGame
       baseVelocity: Vector2(0, -50),
       velocityMultiplierDelta: Vector2(0, 1.5),
     );
-    add(_stars);
+    add(stars);
 
     player = Player(
       sprite: _spriteSheet.getSpriteById(_playerSpriteID),
