@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:space_battles/models/player_data.dart';
 import 'package:space_battles/presentation/blocs.dart';
 
 class MainMenu extends StatelessWidget {
@@ -11,6 +14,7 @@ class MainMenu extends StatelessWidget {
     final authCubit = context.watch<AuthCubit>();
     final email = context.watch<AuthCubit>().state.email;
     final colors = Theme.of(context).colorScheme;
+    final spaceship = PlayerData.spaceship;
 
     return Scaffold(
       body: Center(
@@ -18,19 +22,28 @@ class MainMenu extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 50),
-                child: Text(
-                  'SPACE BATTLES',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 60,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(blurRadius: 40, color: colors.primary),
-                    ],
+              Column(
+                children: [
+                  Text(
+                    'SPACE BATTLES',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 60,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(blurRadius: 40, color: colors.primary),
+                      ],
+                    ),
                   ),
-                ),
+                  Image.asset(
+                    spaceship.assetPath,
+                    width: 72,
+                    height: 72,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 25,
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width / 1.6,
@@ -120,6 +133,22 @@ class MainMenu extends StatelessWidget {
                           style: TextStyle(fontSize: 24),
                         ),
                       ),
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.6,
+                height: MediaQuery.of(context).size.height / 16,
+                child: ElevatedButton(
+                  onPressed: () {
+                    exit(0);
+                  },
+                  child: const Text(
+                    'Exit',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ),
               ),
               const SizedBox(
                 height: 25,

@@ -42,7 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                context.go('/main-menu');
+                context.pop();
               },
               child: const Text(
                 'Cancel',
@@ -51,11 +51,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             FilledButton(
               onPressed: () {
-                authCubit.updateUserData(
-                  email,
-                  field,
-                  newValue,
-                );
+                if (newValue != '') {
+                  authCubit.updateUserData(
+                    email,
+                    field,
+                    newValue,
+                  );
+                }
                 context.pop();
               },
               child: const Text(
@@ -161,19 +163,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 50),
-                        child: Text(
-                          'Not logged in',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            shadows: [
-                              Shadow(blurRadius: 40, color: colors.primary),
-                            ],
-                          ),
+                      Text(
+                        'Not logged in',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(blurRadius: 40, color: colors.primary),
+                          ],
                         ),
+                      ),
+                      const SizedBox(
+                        height: 25,
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width / 1.6,

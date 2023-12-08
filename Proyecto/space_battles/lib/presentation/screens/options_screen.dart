@@ -14,19 +14,19 @@ class OptionsScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 50),
-                child: Text(
-                  'Options',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 60,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(blurRadius: 40, color: colors.primary),
-                    ],
-                  ),
+              Text(
+                'Options',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 60,
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(blurRadius: 40, color: colors.primary),
+                  ],
                 ),
+              ),
+              const SizedBox(
+                height: 25,
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width / 1.6,

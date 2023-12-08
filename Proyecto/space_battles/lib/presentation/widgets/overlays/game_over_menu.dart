@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -37,85 +39,94 @@ class GameOverMenu extends StatelessWidget {
 
     return Center(
       child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            authCubit.state.email != ''
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 50),
-                    child: Text(
-                      'GAME OVER',
-                      style: TextStyle(fontSize: 40, shadows: [
-                        Shadow(blurRadius: 40, color: colors.primary),
-                      ]),
-                    ),
-                  )
-                : Text(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  Text(
                     'GAME OVER',
-                    style: TextStyle(fontSize: 40, shadows: [
-                      Shadow(blurRadius: 40, color: colors.primary),
-                    ]),
-                  ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 1.6,
-              height: MediaQuery.of(context).size.height / 16,
-              child: authCubit.state.email != ''
-                  ? ElevatedButton(
-                      onPressed: () {
-                        saveScore(context, authCubit, scoresCubit);
-                      },
-                      child: const Text(
-                        'Save & exit',
-                        style: TextStyle(fontSize: 24),
-                      ),
-                    )
-                  : const Text(
-                      'Login to save your score!',
-                      style: TextStyle(fontSize: 16),
-                      textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 40,
+                      shadows: [
+                        Shadow(blurRadius: 40, color: colors.primary),
+                      ],
                     ),
-            ),
-            authCubit.state.email != ''
-                ? const SizedBox(
-                    height: 25,
-                  )
-                : const SizedBox(
-                    height: 15,
                   ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 1.6,
-              height: MediaQuery.of(context).size.height / 16,
-              child: ElevatedButton(
-                onPressed: () {
-                  context.pop();
-                  context.push('/play-game');
-                },
-                child: const Text(
-                  'Restart',
-                  style: TextStyle(fontSize: 24),
+                  Text(
+                    'Score: ${gameRef.player.score}',
+                    style: const TextStyle(
+                      fontSize: 30,
+                    ),
+                  ),
+                ],
+              ),
+              authCubit.state.email != ''
+                  ? const SizedBox(
+                      height: 20,
+                    )
+                  : const SizedBox(
+                      height: 5,
+                    ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.6,
+                height: MediaQuery.of(context).size.height / 16,
+                child: authCubit.state.email != ''
+                    ? ElevatedButton(
+                        onPressed: () {
+                          saveScore(context, authCubit, scoresCubit);
+                        },
+                        child: const Text(
+                          'Save & exit',
+                          style: TextStyle(fontSize: 24),
+                        ),
+                      )
+                    : const Text(
+                        'Login to save your score!',
+                        style: TextStyle(fontSize: 20),
+                        textAlign: TextAlign.center,
+                      ),
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.6,
+                height: MediaQuery.of(context).size.height / 16,
+                child: ElevatedButton(
+                  onPressed: () {
+                    context.pop();
+                    context.push('/play-game');
+                  },
+                  child: const Text(
+                    'Restart',
+                    style: TextStyle(fontSize: 24),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 1.6,
-              height: MediaQuery.of(context).size.height / 16,
-              child: ElevatedButton(
-                onPressed: () {
-                  context.pop();
-                },
-                child: const Text(
-                  'Exit',
-                  style: TextStyle(fontSize: 24),
+              const SizedBox(
+                height: 25,
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.6,
+                height: MediaQuery.of(context).size.height / 16,
+                child: ElevatedButton(
+                  onPressed: () {
+                    context.pop();
+                  },
+                  child: const Text(
+                    'Exit',
+                    style: TextStyle(fontSize: 24),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-          ],
+              const SizedBox(
+                height: 25,
+              ),
+            ],
+          ),
         ),
       ),
     );

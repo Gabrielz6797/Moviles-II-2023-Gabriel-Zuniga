@@ -28,18 +28,15 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 50),
-              child: Text(
-                'SPACE BATTLES',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 80,
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(blurRadius: 40, color: colors.primary),
-                  ],
-                ),
+            Text(
+              'SPACE BATTLES',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 80,
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(blurRadius: 40, color: colors.primary),
+                ],
               ),
             ),
           ],
