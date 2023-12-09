@@ -44,18 +44,18 @@ app.*.map.json
 /android/app/release
 
 # BGM
-/assets/audio/1. Neon Road Trip.wav
-/assets/audio/2. Spaceman.wav
-/assets/audio/3. Psychedelia Flashback.wav
-/assets/audio/4. No Pressure Trance.wav
-/assets/audio/5. Romance on Neon.wav
-/assets/audio/6. 80s, Disco, Life.wav
-/assets/audio/7. The SynthRave.wav
-/assets/audio/8. ZoomBeats.wav
-/assets/audio/9. Space Invaders.wav
-/assets/audio/10. Laser Party.wav
-/assets/audio/11. Flanger Party.wav
-/assets/audio/12. SynthBomb.wav
-/assets/audio/13. Night Life.wav
-/assets/audio/14. Retro Noir.wav
-/assets/audio/15. Trickle Bass.wav
+/assets/audio/1. Neon Road Trip.ogg
+/assets/audio/2. Spaceman.ogg
+/assets/audio/3. Psychedelia Flashback.ogg
+/assets/audio/4. No Pressure Trance.ogg
+/assets/audio/5. Romance on Neon.ogg
+/assets/audio/6. 80s, Disco, Life.ogg
+/assets/audio/7. The SynthRave.ogg
+/assets/audio/8. ZoomBeats.ogg
+/assets/audio/9. Space Invaders.ogg
+/assets/audio/10. Laser Party.ogg
+/assets/audio/11. Flanger Party.ogg
+/assets/audio/12. SynthBomb.ogg
+/assets/audio/13. Night Life.ogg
+/assets/audio/14. Retro Noir.ogg
+/assets/audio/15. Trickle Bass.ogg
