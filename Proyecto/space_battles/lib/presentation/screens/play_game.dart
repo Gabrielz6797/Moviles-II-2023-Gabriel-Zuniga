@@ -1,7 +1,6 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:space_battles/game/game.dart';
-import 'package:space_battles/models/player_data.dart';
 import 'package:space_battles/presentation/widgets.dart';
 
 /// [PlayGame] Loads an instance of the game
@@ -19,9 +18,7 @@ class _PlayGameState extends State<PlayGame> {
       body: WillPopScope(
         onWillPop: () async => false,
         child: GameWidget(
-          game: SpaceBattlesGame(
-              audioPlayerComponent: PlayerData.audioPlayerComponent,
-              shipID: PlayerData.spaceship.spriteID),
+          game: SpaceBattlesGame(),
           initialActiveOverlays: const [PauseButton.id],
           overlayBuilderMap: {
             PauseButton.id: (BuildContext context, SpaceBattlesGame gameRef) =>

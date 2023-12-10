@@ -12,15 +12,18 @@ import 'package:space_battles/game/enemy_bullet.dart';
 import 'package:space_battles/game/player.dart';
 import 'package:space_battles/game/player_bullet.dart';
 import 'package:flutter/material.dart';
+import 'package:space_battles/models/player_data.dart';
 import 'package:space_battles/presentation/widgets.dart';
 
 /// [SpaceBattlesGame] Creates and handles a game instance
 class SpaceBattlesGame extends FlameGame
     with PanDetector, TapDetector, HasCollisionDetection {
+  final int _playerSpriteID = PlayerData.spaceship.spriteID;
+  final AudioPlayerComponent audioPlayerComponent =
+      PlayerData.audioPlayerComponent;
   late SpriteSheet _spriteSheet;
   late Player player;
   late Enemy enemy;
-  late AudioPlayerComponent audioPlayerComponent;
   late Timer _enemyActionTimer;
   late Timer _gameActionTimer;
   late TextComponent _playerScore;
@@ -40,17 +43,10 @@ class SpaceBattlesGame extends FlameGame
   final double _movementSpeed3 = 200;
   final double _movementSpeed4 = 300;
   int level = 1;
-  int _playerSpriteID = 0;
   int _enemySpriteID = Random().nextInt(24);
   bool _enemySpawnPositionNegative = Random().nextBool();
   bool _playerDestroyed = false;
   bool _enemyDestroyed = false;
-
-  SpaceBattlesGame({AudioPlayerComponent? audioPlayerComponent, int? shipID})
-      : super() {
-    this.audioPlayerComponent = audioPlayerComponent!;
-    _playerSpriteID = shipID!;
-  }
 
   @override
   FutureOr<void> onLoad() async {
